@@ -1,0 +1,6 @@
+{
+  "name": "BmGstudio_official",
+  "description": "Premium animation studio website with horizontal scrolling and admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

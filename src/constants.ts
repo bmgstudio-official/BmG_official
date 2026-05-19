@@ -1,0 +1,81 @@
+import { SiteConfig } from './types';
+
+export const DEFAULT_SITE_CONFIG: SiteConfig = {
+  logoUrl: 'https://api.dicebear.com/7.x/shapes/svg?seed=bmg&backgroundColor=ff007a',
+  backgroundColor: '#FFEEDF',
+  pages: [
+    {
+      id: 1,
+      title: 'BmGstudio',
+      description: 'CRAFTING MOTION, INSPIRING STORIES.',
+      mediaUrl: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1200&auto=format&fit=crop',
+      mediaType: 'image',
+      styles: {
+        titleColor: '#000000',
+        descriptionColor: '#FF007A',
+        titleSize: 'text-8xl',
+        descriptionSize: 'text-xl',
+        fontFamily: 'font-sans',
+      },
+    },
+    {
+      id: 2,
+      title: 'Our Vision',
+      description: 'We believe in the power of visual storytelling to bridge the gap between imagination and reality.',
+      mediaUrl: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200&auto=format&fit=crop',
+      mediaType: 'image',
+      styles: {
+        titleColor: '#000000',
+        descriptionColor: '#000000',
+        titleSize: 'text-6xl',
+        descriptionSize: 'text-lg',
+        fontFamily: 'font-sans',
+      },
+    },
+    {
+      id: 3,
+      title: 'Works',
+      description: 'Explore our latest artwork and design explorations. (Click to view full gallery)',
+      mediaUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
+      mediaType: 'image',
+      externalLink: 'https://drive.google.com/file/d/1th8WN1usKjF9_q6ERXg1Q7IUtXFvto1I/view?usp=sharing',
+      styles: {
+        titleColor: '#000000',
+        descriptionColor: '#000000',
+        titleSize: 'text-7xl',
+        descriptionSize: 'text-lg',
+        fontFamily: 'font-sans',
+      },
+    },
+    {
+      id: 4,
+      title: 'Showreel 2024',
+      description: 'Experience our creative process in motion.',
+      mediaUrl: 'https://drive.google.com/file/d/1nkfbdiCXpsQFGienTfe44Kss-ufyED5q/view?usp=sharing',
+      mediaType: 'video',
+      externalLink: 'https://drive.google.com/file/d/1nkfbdiCXpsQFGienTfe44Kss-ufyED5q/view?usp=sharing',
+      styles: {
+        titleColor: '#000000',
+        descriptionColor: '#000000',
+        titleSize: 'text-6xl',
+        descriptionSize: 'text-lg',
+        fontFamily: 'font-sans',
+      },
+    },
+    {
+      id: 5,
+      title: 'Connect',
+      description: 'Let\'s create something extraordinary together.',
+      mediaUrl: 'https://images.unsplash.com/photo-1614850523296-e8c041de4392?q=80&w=1200&auto=format&fit=crop',
+      mediaType: 'image',
+      externalLink: 'mailto:hello@bmgstudio.com',
+      styles: {
+        titleColor: '#000000',
+        descriptionColor: '#FF007A',
+        titleSize: 'text-7xl',
+        descriptionSize: 'text-xl',
+        fontFamily: 'font-sans',
+      },
+    },
+  ],
+};
