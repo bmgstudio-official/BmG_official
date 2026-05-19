@@ -83,106 +83,136 @@ export function AdminPanel({ onClose }: AdminPanelProps) {
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
           {activeTab === 'general' ? (
             <div className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold uppercase tracking-wider text-gray-500">Logo (URL)</label>
-                <input 
-                  type="text" 
-                  value={localConfig.logoUrl}
-                  onChange={(e) => setLocalConfig({ ...localConfig, logoUrl: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black outline-none"
-                  placeholder="https://example.com/logo.png"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold uppercase tracking-wider text-gray-500">Site Background Color</label>
-                <div className="flex gap-4">
-                  <input 
-                    type="color" 
-                    value={localConfig.backgroundColor}
-                    onChange={(e) => setLocalConfig({ ...localConfig, backgroundColor: e.target.value })}
-                    className="w-12 h-12 rounded cursor-pointer"
-                  />
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-400">
+                  <div className="h-px flex-1 bg-gray-200"></div>
+                  <span className="text-[10px] font-bold tracking-widest uppercase">Identity</span>
+                  <div className="h-px flex-1 bg-gray-200"></div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold tracking-tight text-gray-700">Logo URL</label>
                   <input 
                     type="text" 
-                    value={localConfig.backgroundColor}
-                    onChange={(e) => setLocalConfig({ ...localConfig, backgroundColor: e.target.value })}
-                    className="flex-1 p-3 border rounded-lg uppercase"
+                    value={localConfig.logoUrl}
+                    onChange={(e) => setLocalConfig({ ...localConfig, logoUrl: e.target.value })}
+                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
+                    placeholder="https://example.com/logo.png"
                   />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-400">
+                  <div className="h-px flex-1 bg-gray-200"></div>
+                  <span className="text-[10px] font-bold tracking-widest uppercase">Canvas Settings</span>
+                  <div className="h-px flex-1 bg-gray-200"></div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold tracking-tight text-gray-700">Global Background Color</label>
+                  <div className="flex gap-4">
+                    <input 
+                      type="color" 
+                      value={localConfig.backgroundColor}
+                      onChange={(e) => setLocalConfig({ ...localConfig, backgroundColor: e.target.value })}
+                      className="w-14 h-14 rounded-lg cursor-pointer border-2 border-white shadow-sm"
+                    />
+                    <input 
+                      type="text" 
+                      value={localConfig.backgroundColor}
+                      onChange={(e) => setLocalConfig({ ...localConfig, backgroundColor: e.target.value })}
+                      className="flex-1 p-3 bg-gray-50 border border-gray-200 rounded-lg uppercase font-mono text-sm tracking-widest"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           ) : (
             <div className="space-y-12">
               {localConfig.pages.map((page, idx) => {
-                const isSpecialPage = page.id === 2 || page.id === 5;
+                const isFullTextPage = page.id === 2 || page.id === 5;
                 return (
-                  <div key={page.id} className="p-6 border rounded-xl space-y-6 bg-gray-50">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-bold text-lg">Page {idx + 1}: {page.title || (page.id === 2 ? 'About' : '')}</h3>
+                  <div key={page.id} className="group relative p-6 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                    <div className="absolute -top-3 -left-3 bg-black text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg">
+                      {idx + 1}
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {isSpecialPage ? (
-                        <div className="space-y-1 col-span-2">
-                          <label className="text-xs font-bold text-gray-400">TEXT CONTENT</label>
-                          <textarea 
-                            value={page.description}
-                            onChange={(e) => updatePage(page.id, { description: e.target.value })}
-                            className="w-full p-2 border rounded h-32 resize-none"
-                            placeholder="Enter text here..."
-                          />
-                        </div>
-                      ) : (
-                        <div className="space-y-1">
-                          <label className="text-xs font-bold text-gray-400">TITLE</label>
-                          <textarea 
-                            value={page.title}
-                            onChange={(e) => updatePage(page.id, { title: e.target.value })}
-                            className="w-full p-2 border rounded h-12 resize-none"
-                          />
-                        </div>
-                      )}
-                      
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-400">MEDIA URL</label>
-                        <input 
-                          type="text" 
-                          value={page.mediaUrl}
-                          onChange={(e) => updatePage(page.id, { mediaUrl: e.target.value })}
-                          className="w-full p-2 border rounded"
-                        />
+                    
+                    <div className="mb-6 flex justify-between items-end border-b pb-4">
+                      <div>
+                        <h3 className="font-bold text-xl tracking-tight text-gray-900 line-clamp-1">
+                          {page.title || (page.id === 2 ? 'About' : page.id === 5 ? 'Connect' : 'Untilted')}
+                        </h3>
+                        <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
+                          {page.id === 1 ? 'Hero Page' : isFullTextPage ? 'Narrative Page' : 'Media Page'}
+                        </p>
                       </div>
                     </div>
 
-                    {!isSpecialPage && (
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-400">DESCRIPTION</label>
-                        <textarea 
-                          value={page.description}
-                          onChange={(e) => updatePage(page.id, { description: e.target.value })}
-                          className="w-full p-2 border rounded h-20 resize-none"
-                        />
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {isSpecialPage ? (
-                        <>
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-gray-400">COLOR</label>
-                            <input 
-                              type="color" 
-                              value={page.styles.descriptionColor}
-                              onChange={(e) => updatePageStyle(page.id, { descriptionColor: e.target.value })}
-                              className="w-full h-8 cursor-pointer"
+                    <div className="space-y-6">
+                      {/* Text Content Area */}
+                      <div className="space-y-4 p-4 bg-gray-50 rounded-xl">
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Text Content</h4>
+                        
+                        {isFullTextPage ? (
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">MAIN CONTENT (Multiline allowed)</label>
+                            <textarea 
+                              value={page.description}
+                              onChange={(e) => updatePage(page.id, { description: e.target.value, title: '' })}
+                              className="w-full p-3 bg-white border border-gray-200 rounded-lg h-32 resize-none text-sm leading-relaxed"
+                              placeholder="Enter the main story or contact info here..."
                             />
                           </div>
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-gray-400">SIZE</label>
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-xs font-semibold text-gray-600">HEADING</label>
+                              <textarea 
+                                value={page.title}
+                                onChange={(e) => updatePage(page.id, { title: e.target.value })}
+                                className="w-full p-3 bg-white border border-gray-200 rounded-lg h-16 resize-none text-sm font-bold"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-xs font-semibold text-gray-600">CAPTION / DESC</label>
+                              <textarea 
+                                value={page.description}
+                                onChange={(e) => updatePage(page.id, { description: e.target.value })}
+                                className="w-full p-3 bg-white border border-gray-200 rounded-lg h-16 resize-none text-sm text-gray-500"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Visual & Style Area */}
+                      <div className="space-y-4 p-4 bg-gray-50 rounded-xl">
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Visual Styles</h4>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">TEXT COLOR</label>
+                            <div className="flex gap-2">
+                              <input 
+                                type="color" 
+                                value={isFullTextPage ? page.styles.descriptionColor : page.styles.titleColor}
+                                onChange={(e) => updatePageStyle(page.id, isFullTextPage ? { descriptionColor: e.target.value } : { titleColor: e.target.value })}
+                                className="w-8 h-8 rounded shrink-0 cursor-pointer border border-gray-200"
+                              />
+                              <input 
+                                type="text"
+                                value={isFullTextPage ? page.styles.descriptionColor : page.styles.titleColor}
+                                onChange={(e) => updatePageStyle(page.id, isFullTextPage ? { descriptionColor: e.target.value } : { titleColor: e.target.value })}
+                                className="w-full text-[10px] font-mono border rounded px-1 uppercase"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">TEXT SIZE</label>
                             <select 
-                              value={page.styles.descriptionSize}
-                              onChange={(e) => updatePageStyle(page.id, { descriptionSize: e.target.value })}
-                              className="w-full p-1 border rounded text-xs"
+                              value={isFullTextPage ? page.styles.descriptionSize : page.styles.titleSize}
+                              onChange={(e) => updatePageStyle(page.id, isFullTextPage ? { descriptionSize: e.target.value } : { titleSize: e.target.value })}
+                              className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs"
                             >
                               <option value="text-sm">X-Small</option>
                               <option value="text-base">Small</option>
@@ -192,90 +222,69 @@ export function AdminPanel({ onClose }: AdminPanelProps) {
                               <option value="text-4xl">Huge</option>
                               <option value="text-6xl">Heading</option>
                               <option value="text-8xl">Giant</option>
+                              <option value="text-[12rem]">Monster</option>
                             </select>
                           </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-gray-400">TITLE COLOR</label>
-                            <input 
-                              type="color" 
-                              value={page.styles.titleColor}
-                              onChange={(e) => updatePageStyle(page.id, { titleColor: e.target.value })}
-                              className="w-full h-8 cursor-pointer"
-                            />
+
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">FONT FAMILY</label>
+                            <select 
+                              value={page.styles.fontFamily}
+                              onChange={(e) => updatePageStyle(page.id, { fontFamily: e.target.value })}
+                              className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs"
+                            >
+                              <option value="font-sans">Outfit (Modern)</option>
+                              <option value="font-display">Space Grotesk (Tech)</option>
+                              <option value="font-inter">Inter (Default)</option>
+                              <option value="font-serif">Playfair Display (Serif)</option>
+                              <option value="font-mono">JetBrains Mono (Code)</option>
+                            </select>
                           </div>
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-gray-400">DESC COLOR</label>
-                            <input 
-                              type="color" 
-                              value={page.styles.descriptionColor}
-                              onChange={(e) => updatePageStyle(page.id, { descriptionColor: e.target.value })}
-                              className="w-full h-8 cursor-pointer"
-                            />
+
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">MEDIA TYPE</label>
+                            <select 
+                              value={page.mediaType}
+                              onChange={(e) => updatePage(page.id, { mediaType: e.target.value as 'image' | 'video' })}
+                              className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs font-medium"
+                            >
+                              <option value="image">Image Asset</option>
+                              <option value="video">Video Loop</option>
+                            </select>
                           </div>
-                        </>
-                      )}
-                      
-                      {!isSpecialPage && (
-                        <div className="space-y-1">
-                          <label className="text-xs font-bold text-gray-400">TITLE SIZE</label>
-                          <select 
-                            value={page.styles.titleSize}
-                            onChange={(e) => updatePageStyle(page.id, { titleSize: e.target.value })}
-                            className="w-full p-1 border rounded text-xs"
-                          >
-                            <option value="text-4xl">Small</option>
-                            <option value="text-6xl">Medium</option>
-                            <option value="text-8xl">Large</option>
-                            <option value="text-[12rem]">Extra Large</option>
-                          </select>
                         </div>
-                      )}
-
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-400">MEDIA TYPE</label>
-                        <select 
-                          value={page.mediaType}
-                          onChange={(e) => updatePage(page.id, { mediaType: e.target.value as 'image' | 'video' })}
-                          className="w-full p-1 border rounded text-xs"
-                        >
-                          <option value="image">Image</option>
-                          <option value="video">Video</option>
-                        </select>
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-400">FONT FAMILY</label>
-                        <select 
-                          value={page.styles.fontFamily}
-                          onChange={(e) => updatePageStyle(page.id, { fontFamily: e.target.value })}
-                          className="w-full p-1 border rounded text-xs"
-                        >
-                          <option value="font-sans">Outfit (Sans)</option>
-                          <option value="font-display">Space Grotesk (Display)</option>
-                          <option value="font-inter">Inter (Modern)</option>
-                          <option value="font-serif">Playfair Display (Serif)</option>
-                          <option value="font-mono">JetBrains Mono (Technical)</option>
-                        </select>
+                      {/* Assets Area */}
+                      <div className="space-y-4 p-4 bg-gray-50 rounded-xl">
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Global Links & Assets</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">MEDIA SRC (IMAGE OR VIDEO URL)</label>
+                            <input 
+                              type="text" 
+                              value={page.mediaUrl}
+                              onChange={(e) => updatePage(page.id, { mediaUrl: e.target.value })}
+                              className="w-full p-2 border border-gray-200 rounded-lg text-xs"
+                              placeholder="https://..."
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">EXTERNAL CTA (ACTION URL)</label>
+                            <input 
+                              type="text" 
+                              value={page.externalLink || ''}
+                              onChange={(e) => updatePage(page.id, { externalLink: e.target.value })}
+                              className="w-full p-2 border border-gray-200 rounded-lg text-xs"
+                              placeholder="https://gmail.com or https://vimeo.com/..."
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-400">EXTERNAL LINK (GOOGLE DRIVE etc.)</label>
-                      <input 
-                        type="text" 
-                        value={page.externalLink || ''}
-                        onChange={(e) => updatePage(page.id, { externalLink: e.target.value })}
-                        className="w-full p-2 border rounded"
-                        placeholder="https://drive.google.com/..."
-                      />
                     </div>
                   </div>
                 );
               })}
-
             </div>
           )}
         </div>

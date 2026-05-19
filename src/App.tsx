@@ -43,7 +43,7 @@ function MainContent() {
       <CustomCursor />
       
       {/* Logo */}
-      <div className="absolute top-8 left-8 z-50">
+      <div className="absolute top-4 left-4 md:top-8 md:left-8 z-50">
         <button 
           onClick={() => setCurrentPage(0)}
           className="group focus:outline-none cursor-none"
@@ -51,13 +51,13 @@ function MainContent() {
           <img 
             src={config.logoUrl} 
             alt="Logo" 
-            className="h-20 w-auto object-contain transition-transform group-hover:scale-105"
+            className="h-10 md:h-20 w-auto object-contain transition-transform group-hover:scale-105"
           />
         </button>
       </div>
 
       {/* Admin Trigger */}
-      <div className="absolute top-8 right-8 z-50">
+      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
         <button 
           onClick={() => setIsAdminOpen(true)}
           className="p-4 opacity-0 hover:opacity-40 transition-all duration-500 cursor-none rounded-full"
@@ -76,10 +76,10 @@ function MainContent() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             onClick={handlePrev}
-            className="nav-arrow absolute left-8 top-1/2 -translate-y-1/2 z-40 p-4 hover:scale-110 transition-transform focus:outline-none cursor-none"
+            className="nav-arrow absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 hover:scale-110 transition-transform focus:outline-none cursor-none bg-white/10 md:bg-transparent rounded-full backdrop-blur-sm md:backdrop-blur-none"
             aria-label="Previous page"
           >
-            <ChevronLeft size={48} strokeWidth={1} />
+            <ChevronLeft size={32} className="md:w-12 md:h-12" strokeWidth={1} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -91,10 +91,10 @@ function MainContent() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             onClick={handleNext}
-            className="nav-arrow absolute right-8 top-1/2 -translate-y-1/2 z-40 p-4 hover:scale-110 transition-transform focus:outline-none cursor-none"
+            className="nav-arrow absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 hover:scale-110 transition-transform focus:outline-none cursor-none bg-white/10 md:bg-transparent rounded-full backdrop-blur-sm md:backdrop-blur-none"
             aria-label="Next page"
           >
-            <ChevronRight size={48} strokeWidth={1} />
+            <ChevronRight size={32} className="md:w-12 md:h-12" strokeWidth={1} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -117,18 +117,18 @@ function MainContent() {
               x: { type: "tween", ease: [0.4, 0, 0.2, 1], duration: 0.8 },
               opacity: { duration: 0.4 }
             }}
-            className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center"
+            className="absolute inset-0 flex flex-col items-center justify-center p-4 md:p-8 text-center"
           >
-            <div className="max-w-7xl w-full flex flex-col items-center gap-12">
+            <div className="max-w-7xl w-full flex flex-col items-center gap-6 md:gap-12">
               {/* Media Section */}
               <motion.div 
-                className={`relative overflow-hidden group orange-hover
-                  ${config.pages[currentPage].id === 1 ? 'max-w-[33%] shadow-none' : ''}
-                  ${config.pages[currentPage].id === 2 ? 'max-w-[25%] rounded-lg shadow-2xl' : ''}
-                  ${config.pages[currentPage].id === 3 ? 'max-w-full rounded-lg shadow-2xl' : ''}
-                  ${config.pages[currentPage].id === 4 ? 'max-w-full rounded-lg shadow-2xl' : ''}
-                  ${config.pages[currentPage].id === 5 ? 'max-w-[20%] rounded-lg shadow-2xl' : ''}
-                  ${[2, 3, 4, 5].includes(config.pages[currentPage].id) ? 'max-h-[65vh]' : ''}
+                className={`relative overflow-hidden group orange-hover flex items-center justify-center
+                  ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none' : ''}
+                  ${config.pages[currentPage].id === 2 ? 'w-[60%] md:w-[25%] rounded-lg shadow-2xl' : ''}
+                  ${config.pages[currentPage].id === 3 ? 'w-fit max-w-[95vw] md:max-w-4xl rounded-lg shadow-2xl' : ''}
+                  ${config.pages[currentPage].id === 4 ? 'w-[95%] md:w-[80%] rounded-lg shadow-2xl' : ''}
+                  ${config.pages[currentPage].id === 5 ? 'w-[50%] md:w-[20%] rounded-lg shadow-2xl' : ''}
+                  ${[2, 3, 4, 5].includes(config.pages[currentPage].id) ? 'h-auto max-h-[50vh] md:max-h-[60vh]' : ''}
                 `}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -142,9 +142,9 @@ function MainContent() {
                   <img 
                     src={config.pages[currentPage].mediaUrl} 
                     alt={config.pages[currentPage].title}
-                    className={`max-w-full object-contain transition-transform duration-700 
+                    className={`max-w-full max-h-full object-contain transition-transform duration-700 
                       ${config.pages[currentPage].id === 1 ? '' : 'group-hover:scale-105'}
-                      ${[2, 3, 4, 5].includes(config.pages[currentPage].id) ? 'max-h-[65vh]' : ''}
+                      ${config.pages[currentPage].id === 3 ? 'block w-auto h-auto' : ''}
                     `}
                   />
                 ) : (
@@ -179,7 +179,7 @@ function MainContent() {
               <div className="space-y-4 w-full">
                 {config.pages[currentPage].title && (
                   <motion.h1 
-                    className={`${config.pages[currentPage].styles.titleSize} ${config.pages[currentPage].styles.fontFamily} font-bold tracking-tighter whitespace-pre-wrap`}
+                    className={`${config.pages[currentPage].styles.titleSize} ${config.pages[currentPage].styles.fontFamily} font-bold tracking-tighter whitespace-pre-wrap break-words`}
                     style={{ color: config.pages[currentPage].styles.titleColor }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -189,7 +189,7 @@ function MainContent() {
                 )}
                 {config.pages[currentPage].description && (
                   <motion.p 
-                    className={`${config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl' : 'max-w-2xl'} mx-auto whitespace-pre-wrap`}
+                    className={`${config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl' : 'max-w-2xl'} mx-auto whitespace-pre-wrap break-words`}
                     style={{ color: config.pages[currentPage].styles.descriptionColor }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -203,8 +203,8 @@ function MainContent() {
         </AnimatePresence>
       </div>
 
-      {/* Pagination Dots */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-4 z-40">
+              {/* Pagination Dots */}
+      <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 flex gap-3 md:gap-4 z-40">
         {config.pages.map((_, idx) => (
           <button
             key={idx}

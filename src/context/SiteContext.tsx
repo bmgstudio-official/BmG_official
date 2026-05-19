@@ -1,21 +1,23 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { SiteConfig } from '../types';
-import { DEFAULT_SITE_CONFIG } from '../constants';
+import configData from '../config.json';
+
+const INITIAL_CONFIG = configData as SiteConfig;
 
 interface SiteContextType {
   config: SiteConfig;
-  updateConfig: (newConfig: SiteConfig) => void;
+  updateConfig: (newConfig: SiteConfig) => Promise<void>;
   resetConfig: () => void;
 }
 
 const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
 export function SiteProvider({ children }: { children: ReactNode }) {
-  const [config, setConfig] = useState<SiteConfig>(DEFAULT_SITE_CONFIG);
+  const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Try to load from API first
+    // Try to load from API first to get real-time updates in dev
     fetch(`/api/config?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
@@ -23,7 +25,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
           setConfig(data);
           localStorage.setItem('bmg_studio_config_fallback', JSON.stringify(data));
         } else {
-          // If API fails, try local storage fallback
+          // Fallback to localStorage if available, otherwise stay with imported JSON
           const local = localStorage.getItem('bmg_studio_config_fallback');
           if (local) setConfig(JSON.parse(local));
         }
@@ -40,18 +42,20 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     setConfig(newConfig);
     localStorage.setItem('bmg_studio_config_fallback', JSON.stringify(newConfig));
     try {
-      await fetch('/api/config', {
+      const response = await fetch('/api/config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newConfig),
       });
+      if (!response.ok) throw new Error('Failed to save to server');
     } catch (err) {
-      console.error('Failed to save config:', err);
+      console.error('Failed to save config to server:', err);
+      // We still updated local state and localStorage, so it's "saved" for the user session
     }
   };
 
   const resetConfig = () => {
-    updateConfig(DEFAULT_SITE_CONFIG);
+    updateConfig(INITIAL_CONFIG);
   };
 
   if (isLoading) {

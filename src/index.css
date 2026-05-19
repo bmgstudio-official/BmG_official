@@ -16,6 +16,33 @@
   }
 }
 
+/* Fix for mobile/touch devices */
+@media (pointer: coarse) {
+  body, .orange-hover, .cursor-none * {
+    cursor: auto !important;
+  }
+  
+  .cursor-fixed-dot, .cursor-floating-orb {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Scale down massive headings on small screens */
+  .text-8xl {
+    font-size: 3rem !important;
+    line-height: 1.1 !important;
+  }
+  .text-\[12rem\] {
+    font-size: 4rem !important;
+    line-height: 1 !important;
+  }
+  .text-6xl {
+    font-size: 2.5rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
 .orange-hover {
   cursor: none !important;
 }
