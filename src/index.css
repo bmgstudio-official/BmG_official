@@ -16,30 +16,37 @@
   }
 }
 
-/* Fix for mobile/touch devices */
-@media (pointer: coarse) {
-  body, .orange-hover, .cursor-none * {
-    cursor: auto !important;
+/* Mobile scaling for specific pages or classes */
+@media (max-width: 640px) {
+  /* Page 1 (Hero) text scaling */
+  .hero-page-title {
+    font-size: 2.5rem !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Page 2 (About) text scaling - adjusted to be slightly smaller */
+  .page-2-description {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
   }
   
-  .cursor-fixed-dot, .cursor-floating-orb {
-    display: none !important;
-  }
-}
-
-@media (max-width: 640px) {
   /* Scale down massive headings on small screens */
   .text-8xl {
-    font-size: 3rem !important;
+    font-size: 2.8rem !important;
     line-height: 1.1 !important;
   }
   .text-\[12rem\] {
-    font-size: 4rem !important;
+    font-size: 3.5rem !important;
     line-height: 1 !important;
   }
   .text-6xl {
-    font-size: 2.5rem !important;
+    font-size: 2.2rem !important;
     line-height: 1.2 !important;
+  }
+
+  /* Ensure cursor-none doesn't break mobile interactivity too much */
+  .cursor-none * {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 

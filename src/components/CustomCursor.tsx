@@ -15,6 +15,13 @@ export function CustomCursor() {
       cursorY.set(e.clientY);
     };
 
+    const moveTouch = (e: TouchEvent) => {
+      if (e.touches[0]) {
+        cursorX.set(e.touches[0].clientX);
+        cursorY.set(e.touches[0].clientY);
+      }
+    };
+
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const clickable = target.closest('button, a, .orange-hover, .nav-arrow');
@@ -23,18 +30,57 @@ export function CustomCursor() {
       setIsNavArrow(!!navArrow);
     };
 
+    const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      const clickable = target.closest('button, a, .orange-hover, .nav-arrow');
+      const navArrow = target.closest('.nav-arrow');
+      setIsHovering(!!clickable);
+      setIsNavArrow(!!navArrow);
+      if (e.touches[0]) {
+        cursorX.set(e.touches[0].clientX);
+        cursorY.set(e.touches[0].clientY);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches[0]) {
+        cursorX.set(e.touches[0].clientX);
+        cursorY.set(e.touches[0].clientY);
+        
+        // Re-check target under touch point
+        const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) as HTMLElement;
+        if (target) {
+          const clickable = target.closest('button, a, .orange-hover, .nav-arrow');
+          const navArrow = target.closest('.nav-arrow');
+          setIsHovering(!!clickable);
+          setIsNavArrow(!!navArrow);
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      setIsHovering(false);
+      setIsNavArrow(false);
+    };
+
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
     
     return () => {
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [cursorX, cursorY]);
 
   return (
     <motion.div
-      className="cursor-fixed-dot fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center sm:flex hidden"
+      className="cursor-fixed-dot fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center"
       style={{
         x: cursorX,
         y: cursorY,
