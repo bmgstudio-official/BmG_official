@@ -20,7 +20,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     },
     {
       id: 2,
-      title: 'Our Vision',
+      title: '',
       description: 'We believe in the power of visual storytelling to bridge the gap between imagination and reality.',
       mediaUrl: 'https://i.ibb.co/nNY49f6R/bmg-both-comp-002-00000.png',
       mediaType: 'image',
@@ -34,7 +34,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     },
     {
       id: 3,
-      title: 'Works',
+      title: 'Artworks',
       description: 'Explore our latest artwork and design explorations. (Click to view full gallery)',
       mediaUrl: 'https://i.ibb.co/ds5NrZWc/lying-white-1.png',
       mediaType: 'image',
@@ -64,8 +64,8 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     },
     {
       id: 5,
-      title: 'Connect',
-      description: "Contact\n\nWe are ready to collaborate.\nLeave a trace in whatever way suits you.\n\ninstagram : @boy.meets.girl_\nemail : hello.bmgstudio.official@gmail.com",
+      title: '',
+      description: "Contact\n\nWe are ready to collaborate. \nLeave a trace in whatever way suits you.\n\ninstagram : @boy.meets.girl_\nemail : hello.bmgstudio.official@gmail.com",
       mediaUrl: 'https://i.ibb.co/KpDRZqh7/bmg-bridge-comp-mov-20231115-175726-909.jpg',
       mediaType: 'image',
       externalLink: 'mailto:hello.bmgstudio.official@gmail.com',
