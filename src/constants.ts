@@ -66,7 +66,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       id: 5,
       title: 'Connect',
       description: 'Let\'s create something extraordinary together.',
-      mediaUrl: 'https://i.ibb.co/fGkvjk3T/lying-blue-1.png',
+      mediaUrl: 'https://i.ibb.co/KpDRZqh7/bmg-bridge-comp-mov-20231115-175726-909.jpg',
       mediaType: 'image',
       externalLink: 'mailto:hello@bmgstudio.com',
       styles: {

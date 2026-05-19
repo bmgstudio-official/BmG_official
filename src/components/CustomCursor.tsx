@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'motion/react';
+import { motion, useMotionValue, AnimatePresence } from 'motion/react';
 
 export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isOrange, setIsOrange] = useState(false);
+  const [isNavArrow, setIsNavArrow] = useState(false);
   
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  
-  const springConfig = { damping: 25, stiffness: 250 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
     const moveCursor = (e: MouseEvent) => {
@@ -20,9 +17,10 @@ export function CustomCursor() {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      const clickable = target.closest('button, a, .orange-hover');
+      const clickable = target.closest('button, a, .orange-hover, .nav-arrow');
+      const navArrow = target.closest('.nav-arrow');
       setIsHovering(!!clickable);
-      setIsOrange(!!target.closest('.orange-hover'));
+      setIsNavArrow(!!navArrow);
     };
 
     window.addEventListener('mousemove', moveCursor);
@@ -36,7 +34,7 @@ export function CustomCursor() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center transition-colors duration-300"
+      className="fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center"
       style={{
         x: cursorX,
         y: cursorY,
@@ -44,23 +42,31 @@ export function CustomCursor() {
         translateY: '-50%',
       }}
     >
-      {isOrange ? (
-        <motion.div 
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="w-24 h-24 rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center"
-        >
-          <span className="text-white font-bold text-lg uppercase tracking-widest">go</span>
-        </motion.div>
-      ) : (
-        <motion.div
-          animate={{
-            scale: isHovering ? 1.5 : 1,
-            opacity: isHovering ? 0.8 : 0.4,
-          }}
-          className="w-4 h-4 rounded-full bg-black"
-        />
-      )}
+      <AnimatePresence>
+        {isHovering ? (
+          <motion.div 
+            key="orange-cursor"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ 
+              scale: isNavArrow ? 0.6 : 1, 
+              opacity: 1 
+            }}
+            exit={{ scale: 0, opacity: 0 }}
+            className="w-32 h-32 rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center"
+          >
+            {!isNavArrow && (
+              <span className="text-white font-bold text-xl uppercase tracking-widest">go</span>
+            )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="dot-cursor"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="w-3 h-3 rounded-full bg-black opacity-60"
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

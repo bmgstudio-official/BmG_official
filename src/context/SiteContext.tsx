@@ -15,24 +15,39 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/config')
+    // Try to load from API first
+    fetch(`/api/config?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         if (data && !data.error) {
           setConfig(data);
+          localStorage.setItem('bmg_studio_config_fallback', JSON.stringify(data));
+        } else {
+          // If API fails, try local storage fallback
+          const local = localStorage.getItem('bmg_studio_config_fallback');
+          if (local) setConfig(JSON.parse(local));
         }
       })
-      .catch(err => console.error('Failed to fetch config:', err))
+      .catch(err => {
+        console.error('Failed to fetch config:', err);
+        const local = localStorage.getItem('bmg_studio_config_fallback');
+        if (local) setConfig(JSON.parse(local));
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
-  const updateConfig = (newConfig: SiteConfig) => {
+  const updateConfig = async (newConfig: SiteConfig) => {
     setConfig(newConfig);
-    fetch('/api/config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newConfig),
-    }).catch(err => console.error('Failed to save config:', err));
+    localStorage.setItem('bmg_studio_config_fallback', JSON.stringify(newConfig));
+    try {
+      await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newConfig),
+      });
+    } catch (err) {
+      console.error('Failed to save config:', err);
+    }
   };
 
   const resetConfig = () => {
