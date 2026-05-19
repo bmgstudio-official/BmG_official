@@ -123,13 +123,12 @@ function MainContent() {
               {/* Media Section */}
               <motion.div 
                 className={`relative overflow-hidden group orange-hover flex items-center justify-center
-                  ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none' : ''}
-                  ${config.pages[currentPage].id === 2 ? 'w-[30%] md:w-[25%] rounded-lg shadow-2xl' : ''}
-                  ${config.pages[currentPage].id === 3 ? 'w-fit max-w-[85vw] md:max-w-4xl rounded-lg shadow-2xl' : ''}
-                  ${config.pages[currentPage].id === 4 ? 'w-[95%] md:w-[85%] aspect-video rounded-lg shadow-2xl overflow-hidden' : ''}
-                  ${config.pages[currentPage].id === 5 ? 'w-[50%] md:w-[20%] rounded-lg shadow-2xl' : ''}
-                  ${[2, 3, 5].includes(config.pages[currentPage].id) ? 'h-auto max-h-[50vh] md:max-h-[70vh]' : ''}
-                  ${config.pages[currentPage].id === 4 ? 'h-auto max-h-[60vh] md:max-h-[80vh]' : ''}
+                  ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none border-none' : 'rounded-lg shadow-2xl'}
+                  ${config.pages[currentPage].id === 3 ? 'w-fit max-w-[70vw] md:max-w-2xl' : ''}
+                  ${config.pages[currentPage].mediaType === 'video' ? 'w-[95%] md:w-[85%] aspect-video overflow-hidden' : ''}
+                  ${[2, 5].includes(config.pages[currentPage].id) ? 'w-[40%] md:w-[25%]' : ''}
+                  ${[2, 3, 5].includes(config.pages[currentPage].id) ? 'h-auto max-h-[45vh] md:max-h-[60vh]' : ''}
+                  ${config.pages[currentPage].mediaType === 'video' ? 'h-auto max-h-[60vh] md:max-h-[80vh]' : ''}
                 `}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -191,7 +190,7 @@ function MainContent() {
                 )}
                 {config.pages[currentPage].description && (
                   <motion.p 
-                    className={`${config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl page-2-description font-serif' : 'max-w-2xl'} mx-auto whitespace-pre-wrap break-words`}
+                    className={`${config.pages[currentPage].id === 5 ? 'text-lg md:text-4xl' : config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl page-2-description font-serif' : 'max-w-2xl text-balance'} mx-auto whitespace-pre-wrap break-words`}
                     style={{ color: config.pages[currentPage].styles.descriptionColor }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

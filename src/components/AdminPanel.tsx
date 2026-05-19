@@ -139,10 +139,10 @@ export function AdminPanel({ onClose }: AdminPanelProps) {
                     <div className="mb-6 flex justify-between items-end border-b pb-4">
                       <div>
                         <h3 className="font-bold text-xl tracking-tight text-gray-900 line-clamp-1">
-                          {page.title || (page.id === 2 ? 'About' : page.id === 5 ? 'Connect' : 'Untilted')}
+                          {page.title || (page.id === 1 ? 'Hero' : page.id === 2 ? 'About' : page.id === 5 ? 'Connect' : 'Untitled')}
                         </h3>
                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
-                          {page.id === 1 ? 'Hero Page' : isFullTextPage ? 'Narrative Page' : 'Media Page'}
+                          {page.id === 1 ? 'Hero Page' : page.id === 2 ? 'Narrative Page' : page.id === 5 ? 'Connect Page' : page.mediaType === 'video' ? 'Video Page' : 'Media Page'}
                         </p>
                       </div>
                     </div>
@@ -151,37 +151,26 @@ export function AdminPanel({ onClose }: AdminPanelProps) {
                       {/* Text Content Area */}
                       <div className="space-y-4 p-4 bg-gray-50 rounded-xl">
                         <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Text Content</h4>
-                        
-                        {isFullTextPage ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <label className="text-xs font-semibold text-gray-600">MAIN CONTENT (Multiline allowed)</label>
+                            <label className="text-xs font-semibold text-gray-600">TITLE / HEADING</label>
                             <textarea 
-                              value={page.description}
-                              onChange={(e) => updatePage(page.id, { description: e.target.value, title: '' })}
-                              className="w-full p-3 bg-white border border-gray-200 rounded-lg h-32 resize-none text-sm leading-relaxed"
-                              placeholder="Enter the main story or contact info here..."
+                              value={page.title}
+                              onChange={(e) => updatePage(page.id, { title: e.target.value })}
+                              className="w-full p-3 bg-white border border-gray-200 rounded-lg h-16 resize-none text-sm font-bold"
+                              placeholder="Leave empty to hide..."
                             />
                           </div>
-                        ) : (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <label className="text-xs font-semibold text-gray-600">HEADING</label>
-                              <textarea 
-                                value={page.title}
-                                onChange={(e) => updatePage(page.id, { title: e.target.value })}
-                                className="w-full p-3 bg-white border border-gray-200 rounded-lg h-16 resize-none text-sm font-bold"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-xs font-semibold text-gray-600">CAPTION / DESC</label>
-                              <textarea 
-                                value={page.description}
-                                onChange={(e) => updatePage(page.id, { description: e.target.value })}
-                                className="w-full p-3 bg-white border border-gray-200 rounded-lg h-16 resize-none text-sm text-gray-500"
-                              />
-                            </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-gray-600">DESCRIPTION / CONTENT</label>
+                            <textarea 
+                              value={page.description}
+                              onChange={(e) => updatePage(page.id, { description: e.target.value })}
+                              className="w-full p-3 bg-white border border-gray-200 rounded-lg h-32 md:h-16 resize-none text-sm leading-relaxed"
+                              placeholder="Enter content here..."
+                            />
                           </div>
-                        )}
+                        </div>
                       </div>
 
                       {/* Visual & Style Area */}
