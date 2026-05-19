@@ -1,14 +1,14 @@
 import { SiteConfig } from './types';
 
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
-  logoUrl: 'https://api.dicebear.com/7.x/shapes/svg?seed=bmg&backgroundColor=ff007a',
+  logoUrl: 'https://i.ibb.co/4n3RFDrL/bmg-logo-v2.png',
   backgroundColor: '#FFEEDF',
   pages: [
     {
       id: 1,
       title: 'BmGstudio',
       description: 'CRAFTING MOTION, INSPIRING STORIES.',
-      mediaUrl: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1200&auto=format&fit=crop',
+      mediaUrl: 'https://i.ibb.co/4n3RFDrL/bmg-logo-v2.png',
       mediaType: 'image',
       styles: {
         titleColor: '#000000',
@@ -22,7 +22,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       id: 2,
       title: 'Our Vision',
       description: 'We believe in the power of visual storytelling to bridge the gap between imagination and reality.',
-      mediaUrl: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200&auto=format&fit=crop',
+      mediaUrl: 'https://i.ibb.co/nNY49f6R/bmg-both-comp-002-00000.png',
       mediaType: 'image',
       styles: {
         titleColor: '#000000',
@@ -36,7 +36,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       id: 3,
       title: 'Works',
       description: 'Explore our latest artwork and design explorations. (Click to view full gallery)',
-      mediaUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
+      mediaUrl: 'https://i.ibb.co/ds5NrZWc/lying-white-1.png',
       mediaType: 'image',
       externalLink: 'https://drive.google.com/file/d/1th8WN1usKjF9_q6ERXg1Q7IUtXFvto1I/view?usp=sharing',
       styles: {
@@ -66,7 +66,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       id: 5,
       title: 'Connect',
       description: 'Let\'s create something extraordinary together.',
-      mediaUrl: 'https://images.unsplash.com/photo-1614850523296-e8c041de4392?q=80&w=1200&auto=format&fit=crop',
+      mediaUrl: 'https://i.ibb.co/fGkvjk3T/lying-blue-1.png',
       mediaType: 'image',
       externalLink: 'mailto:hello@bmgstudio.com',
       styles: {

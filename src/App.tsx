@@ -8,17 +8,20 @@ import { CustomCursor } from './components/CustomCursor';
 function MainContent() {
   const { config } = useSite();
   const [currentPage, setCurrentPage] = useState(0);
+  const [direction, setDirection] = useState(0); // -1 for left, 1 for right
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const totalPages = config.pages.length;
 
   const handleNext = useCallback(() => {
     if (currentPage < totalPages - 1) {
+      setDirection(1);
       setCurrentPage((prev) => prev + 1);
     }
   }, [currentPage, totalPages]);
 
   const handlePrev = useCallback(() => {
     if (currentPage > 0) {
+      setDirection(-1);
       setCurrentPage((prev) => prev - 1);
     }
   }, [currentPage]);
@@ -98,19 +101,23 @@ function MainContent() {
 
       {/* Pages Container */}
       <div className="h-full w-full relative">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="popLayout" custom={direction}>
           <motion.div
             key={currentPage}
-            initial={{ opacity: 0, x: 100 }}
+            custom={direction}
+            initial={(d: number) => ({ opacity: 0, x: d > 0 ? 200 : -200 })}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+            exit={(d: number) => ({ opacity: 0, x: d > 0 ? -200 : 200 })}
+            transition={{ type: 'spring', damping: 30, stiffness: 150 }}
             className="h-full w-full flex flex-col items-center justify-center p-8 text-center"
           >
-            <div className="max-w-6xl w-full flex flex-col items-center gap-12">
+            <div className="max-w-7xl w-full flex flex-col items-center gap-12">
               {/* Media Section */}
               <motion.div 
-                className={`relative max-w-full max-h-[65vh] rounded-lg overflow-hidden shadow-2xl group ${config.pages[currentPage].id === 3 ? 'orange-hover' : ''}`}
+                className={`relative overflow-hidden group 
+                  ${[2, 3, 4].includes(config.pages[currentPage].id) ? 'orange-hover' : ''}
+                  ${config.pages[currentPage].id === 1 ? 'max-w-[30%] shadow-none' : 'max-w-full max-h-[65vh] rounded-lg shadow-2xl'}
+                `}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 onClick={() => {
@@ -123,10 +130,12 @@ function MainContent() {
                   <img 
                     src={config.pages[currentPage].mediaUrl} 
                     alt={config.pages[currentPage].title}
-                    className="max-w-full max-h-[65vh] object-contain transition-transform duration-700 group-hover:scale-105"
+                    className={`max-w-full object-contain transition-transform duration-700 
+                      ${config.pages[currentPage].id === 1 ? '' : 'group-hover:scale-105 max-h-[65vh]'}
+                    `}
                   />
                 ) : (
-                  <div className="aspect-video w-[80vw] max-w-4xl">
+                  <div className="aspect-video w-[90vw] max-w-6xl">
                     {config.pages[currentPage].mediaUrl.includes('drive.google.com') ? (
                       <iframe
                         src={config.pages[currentPage].mediaUrl.replace('/view', '/preview')}

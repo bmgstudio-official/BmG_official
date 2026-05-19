@@ -48,28 +48,18 @@ export function CustomCursor() {
         <motion.div 
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="w-16 h-16 rounded-full bg-orange-500/80 mix-blend-difference"
-        />
+          className="w-24 h-24 rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center"
+        >
+          <span className="text-white font-bold text-lg uppercase tracking-widest">go</span>
+        </motion.div>
       ) : (
         <motion.div
           animate={{
             scale: isHovering ? 1.5 : 1,
+            opacity: isHovering ? 0.8 : 0.4,
           }}
-          className="relative"
-        >
-          {/* Arrow SVG */}
-          <svg 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1.5"
-            className="text-black"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </motion.div>
+          className="w-4 h-4 rounded-full bg-black"
+        />
       )}
     </motion.div>
   );

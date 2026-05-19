@@ -11,20 +11,37 @@ interface SiteContextType {
 const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
 export function SiteProvider({ children }: { children: ReactNode }) {
-  const [config, setConfig] = useState<SiteConfig>(() => {
-    const saved = localStorage.getItem('bmg_studio_config');
-    return saved ? JSON.parse(saved) : DEFAULT_SITE_CONFIG;
-  });
+  const [config, setConfig] = useState<SiteConfig>(DEFAULT_SITE_CONFIG);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => {
+        if (data && !data.error) {
+          setConfig(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch config:', err))
+      .finally(() => setIsLoading(false));
+  }, []);
 
   const updateConfig = (newConfig: SiteConfig) => {
     setConfig(newConfig);
-    localStorage.setItem('bmg_studio_config', JSON.stringify(newConfig));
+    fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newConfig),
+    }).catch(err => console.error('Failed to save config:', err));
   };
 
   const resetConfig = () => {
-    setConfig(DEFAULT_SITE_CONFIG);
-    localStorage.removeItem('bmg_studio_config');
+    updateConfig(DEFAULT_SITE_CONFIG);
   };
+
+  if (isLoading) {
+    return <div className="h-screen w-full flex items-center justify-center bg-[#FFEEDF]">Loading...</div>;
+  }
 
   return (
     <SiteContext.Provider value={{ config, updateConfig, resetConfig }}>
