@@ -65,10 +65,10 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     {
       id: 5,
       title: 'Connect',
-      description: 'Let\'s create something extraordinary together.',
+      description: "Contact\n\nWe are ready to collaborate.\nLeave a trace in whatever way suits you.\n\ninstagram : @boy.meets.girl_\nemail : hello.bmgstudio.official@gmail.com",
       mediaUrl: 'https://i.ibb.co/KpDRZqh7/bmg-bridge-comp-mov-20231115-175726-909.jpg',
       mediaType: 'image',
-      externalLink: 'mailto:hello@bmgstudio.com',
+      externalLink: 'mailto:hello.bmgstudio.official@gmail.com',
       styles: {
         titleColor: '#000000',
         descriptionColor: '#FF007A',

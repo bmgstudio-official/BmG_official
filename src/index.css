@@ -9,6 +9,10 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
+.font-serif {
+  font-family: "Playfair Display", serif !important;
+}
+
 @layer base {
   body {
     @apply antialiased overflow-hidden;
@@ -17,6 +21,11 @@
 }
 
 /* Mobile scaling for specific pages or classes */
+/* Page 2 (About) text styling */
+.page-2-description {
+  font-family: "Playfair Display", serif !important;
+}
+
 @media (max-width: 640px) {
   /* Page 1 (Hero) text scaling */
   .hero-page-title {

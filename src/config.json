@@ -26,8 +26,8 @@
         "titleColor": "#000000",
         "descriptionColor": "#ff4d00",
         "titleSize": "text-4xl",
-        "descriptionSize": "text-xl",
-        "fontFamily": "font-sans"
+        "descriptionSize": "text-2xl",
+        "fontFamily": "font-serif"
       }
     },
     {
@@ -39,8 +39,8 @@
       "externalLink": "https://drive.google.com/file/d/1th8WN1usKjF9_q6ERXg1Q7IUtXFvto1I/view?usp=sharing",
       "styles": {
         "titleColor": "#000000",
-        "descriptionColor": "#000000",
-        "titleSize": "text-7xl",
+        "descriptionColor": "#ff4d00",
+        "titleSize": "text-6xl",
         "descriptionSize": "text-lg",
         "fontFamily": "font-sans"
       }
@@ -62,16 +62,16 @@
     },
     {
       "id": 5,
-      "title": "",
-      "description": "Contact\nLet's create something extraordinary together.",
+      "title": "Connect",
+      "description": "Contact\n\nWe are ready to collaborate.\nLeave a trace in whatever way suits you.\n\ninstagram : @boy.meets.girl_\nemail : hello.bmgstudio.official@gmail.com",
       "mediaUrl": "https://i.ibb.co/KpDRZqh7/bmg-bridge-comp-mov-20231115-175726-909.jpg",
       "mediaType": "image",
-      "externalLink": "mailto:hello@bmgstudio.com",
+      "externalLink": "mailto:hello.bmgstudio.official@gmail.com",
       "styles": {
         "titleColor": "#000000",
-        "descriptionColor": "#FF007A",
+        "descriptionColor": "#ff4d00",
         "titleSize": "text-7xl",
-        "descriptionSize": "text-xl",
+        "descriptionSize": "text-4xl",
         "fontFamily": "font-sans"
       }
     }
