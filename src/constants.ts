@@ -1,81 +1,81 @@
 import { SiteConfig } from './types';
 
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
-  logoUrl: 'https://i.ibb.co/4n3RFDrL/bmg-logo-v2.png',
-  backgroundColor: '#FFEEDF',
+  logoUrl: "https://i.ibb.co/4n3RFDrL/bmg-logo-v2.png",
+  backgroundColor: "#FFEEDF",
   pages: [
     {
       id: 1,
-      title: 'BmGstudio',
-      description: 'CRAFTING MOTION, INSPIRING STORIES.',
-      mediaUrl: 'https://i.ibb.co/4n3RFDrL/bmg-logo-v2.png',
-      mediaType: 'image',
+      title: "보이밋걸 스튜디오",
+      description: "",
+      mediaUrl: "https://i.ibb.co/4n3RFDrL/bmg-logo-v2.png",
+      mediaType: "image",
       styles: {
-        titleColor: '#000000',
-        descriptionColor: '#FF007A',
-        titleSize: 'text-8xl',
-        descriptionSize: 'text-xl',
-        fontFamily: 'font-sans',
-      },
+        titleColor: "#000000",
+        descriptionColor: "#ff4d00",
+        titleSize: "text-4xl",
+        descriptionSize: "text-xl",
+        fontFamily: "font-sans"
+      }
     },
     {
       id: 2,
-      title: '',
-      description: 'We believe in the power of visual storytelling to bridge the gap between imagination and reality.',
-      mediaUrl: 'https://i.ibb.co/nNY49f6R/bmg-both-comp-002-00000.png',
-      mediaType: 'image',
+      title: "",
+      description: "‘보이밋걸 (Boy Meets Girl)’은\n우연한 만남으로 생기는 낭만적 이야기를 총칭하는 \n장르 용어에서 따온 이름입니다.\n\n보이와 걸이 만나 이야기가 시작되듯\n모든 만남 속에는 다양한 모양과 이야기가 있다고 생각합니다.\n\n사람이나 사물과 같은 유형의 만남부터 생각이나 느낌과 같은 무형의 만남까지,\n우리는 다양한 형태의 만남과 마주치며 그 안에서 다양한 감정을 만나기도 합니다.\n    \n보이밋걸은 그 만남들 속에서 펼쳐지는 다양한 이야기와 감정들을\n아트웍에 담아 그래픽디자인과 애니메이션으로 표현합니다.",
+      mediaUrl: "https://i.ibb.co/nNY49f6R/bmg-both-comp-002-00000.png",
+      mediaType: "image",
       styles: {
-        titleColor: '#000000',
-        descriptionColor: '#000000',
-        titleSize: 'text-6xl',
-        descriptionSize: 'text-lg',
-        fontFamily: 'font-sans',
-      },
+        titleColor: "#000000",
+        descriptionColor: "#ff4d00",
+        titleSize: "text-4xl",
+        descriptionSize: "text-2xl",
+        fontFamily: "font-serif"
+      }
     },
     {
       id: 3,
-      title: 'Artworks',
-      description: 'Explore our latest artwork and design explorations. (Click to view full gallery)',
-      mediaUrl: 'https://i.ibb.co/ds5NrZWc/lying-white-1.png',
-      mediaType: 'image',
-      externalLink: 'https://drive.google.com/file/d/1th8WN1usKjF9_q6ERXg1Q7IUtXFvto1I/view?usp=sharing',
+      title: "Artworks",
+      description: "Explore our latest artwork and design explorations. (Click to view full gallery)",
+      mediaUrl: "https://i.ibb.co/ds5NrZWc/lying-white-1.png",
+      mediaType: "image",
+      externalLink: "https://drive.google.com/file/d/1th8WN1usKjF9_q6ERXg1Q7IUtXFvto1I/view?usp=sharing",
       styles: {
-        titleColor: '#000000',
-        descriptionColor: '#000000',
-        titleSize: 'text-7xl',
-        descriptionSize: 'text-lg',
-        fontFamily: 'font-sans',
-      },
+        titleColor: "#000000",
+        descriptionColor: "#ff4d00",
+        titleSize: "text-6xl",
+        descriptionSize: "text-lg",
+        fontFamily: "font-sans"
+      }
     },
     {
       id: 4,
-      title: 'Showreel 2024',
-      description: 'Experience our creative process in motion.',
-      mediaUrl: 'https://drive.google.com/file/d/1nkfbdiCXpsQFGienTfe44Kss-ufyED5q/view?usp=sharing',
-      mediaType: 'video',
-      externalLink: 'https://drive.google.com/file/d/1nkfbdiCXpsQFGienTfe44Kss-ufyED5q/view?usp=sharing',
+      title: "Showreel 2026",
+      description: "Experience our creative process in motion.",
+      mediaUrl: "https://drive.google.com/file/d/1nkfbdiCXpsQFGienTfe44Kss-ufyED5q/view?usp=sharing",
+      mediaType: "video",
+      externalLink: "https://drive.google.com/file/d/1nkfbdiCXpsQFGienTfe44Kss-ufyED5q/view?usp=sharing",
       styles: {
-        titleColor: '#000000',
-        descriptionColor: '#000000',
-        titleSize: 'text-6xl',
-        descriptionSize: 'text-lg',
-        fontFamily: 'font-sans',
-      },
+        titleColor: "#000000",
+        descriptionColor: "#ff4d00",
+        titleSize: "text-6xl",
+        descriptionSize: "text-lg",
+        fontFamily: "font-sans"
+      }
     },
     {
       id: 5,
-      title: '',
-      description: "Contact\n\nWe are ready to collaborate. \nLeave a trace in whatever way suits you.\n\ninstagram : @boy.meets.girl_\nemail : hello.bmgstudio.official@gmail.com",
-      mediaUrl: 'https://i.ibb.co/KpDRZqh7/bmg-bridge-comp-mov-20231115-175726-909.jpg',
-      mediaType: 'image',
-      externalLink: 'mailto:hello.bmgstudio.official@gmail.com',
+      title: "",
+      description: "Contact\n\nWe are ready to collaborate.\nLeave a trace in whatever way suits you.\n\ninstagram : @boy.meets.girl_\nemail : hello.bmgstudio.official@gmail.com",
+      mediaUrl: "https://i.ibb.co/KpDRZqh7/bmg-bridge-comp-mov-20231115-175726-909.jpg",
+      mediaType: "image",
+      externalLink: "mailto:hello.bmgstudio.official@gmail.com",
       styles: {
-        titleColor: '#000000',
-        descriptionColor: '#FF007A',
-        titleSize: 'text-7xl',
-        descriptionSize: 'text-xl',
-        fontFamily: 'font-sans',
-      },
-    },
-  ],
+        titleColor: "#000000",
+        descriptionColor: "#ff4d00",
+        titleSize: "text-7xl",
+        descriptionSize: "text-4xl",
+        fontFamily: "font-sans"
+      }
+    }
+  ]
 };

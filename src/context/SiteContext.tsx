@@ -24,16 +24,10 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         if (data && !data.error) {
           setConfig(data);
           localStorage.setItem('bmg_studio_config_fallback_v2', JSON.stringify(data));
-        } else {
-          // Fallback to localStorage if available, otherwise stay with imported JSON
-          const local = localStorage.getItem('bmg_studio_config_fallback_v2');
-          if (local) setConfig(JSON.parse(local));
         }
       })
       .catch(err => {
         console.error('Failed to fetch config:', err);
-        const local = localStorage.getItem('bmg_studio_config_fallback_v2');
-        if (local) setConfig(JSON.parse(local));
       })
       .finally(() => setIsLoading(false));
   }, []);
