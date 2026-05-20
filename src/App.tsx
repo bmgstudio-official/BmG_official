@@ -132,10 +132,9 @@ function MainContent() {
                 className={`relative overflow-hidden group orange-hover flex items-center justify-center
                   ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none border-none' : 'rounded-lg shadow-2xl'}
                   ${config.pages[currentPage].id === 3 ? 'w-fit max-w-[70vw] md:max-w-2xl' : ''}
-                  ${config.pages[currentPage].mediaType === 'video' ? 'w-full md:w-[85%] aspect-video overflow-hidden bg-black' : ''}
+                  ${config.pages[currentPage].mediaType === 'video' ? 'w-full md:w-[85%] aspect-video h-auto max-h-[60vh] md:max-h-[80vh] bg-black' : ''}
                   ${[2, 5].includes(config.pages[currentPage].id) ? 'w-[40%] md:w-[25%]' : ''}
                   ${[2, 3, 5].includes(config.pages[currentPage].id) ? 'h-auto max-h-[45vh] md:max-h-[60vh]' : ''}
-                  ${config.pages[currentPage].mediaType === 'video' ? 'h-auto aspect-video max-h-[50vh] md:max-h-[80vh]' : ''}
                 `}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -155,16 +154,14 @@ function MainContent() {
                     `}
                   />
                 ) : (
-                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                  <div className="relative w-full aspect-video flex items-center justify-center overflow-hidden bg-black">
                     {config.pages[currentPage].mediaUrl.includes('drive.google.com') ? (
-                      <div className="relative w-full h-0 pb-[56.25%] overflow-hidden">
-                        <iframe
-                          src={`${config.pages[currentPage].mediaUrl.replace('/view', '/preview')}&vq=hd1080`}
-                          className="absolute top-0 left-0 w-full h-full border-none"
-                          allow="autoplay; fullscreen"
-                          title={config.pages[currentPage].title}
-                        />
-                      </div>
+                      <iframe
+                        src={`${config.pages[currentPage].mediaUrl.replace('/view', '/preview')}&vq=hd1080`}
+                        className="absolute inset-0 w-full h-full border-none"
+                        allow="autoplay; fullscreen"
+                        title={config.pages[currentPage].title}
+                      />
                     ) : (
                       <video 
                         src={config.pages[currentPage].mediaUrl}
@@ -189,7 +186,7 @@ function MainContent() {
               <div className="space-y-4 w-full">
                 {config.pages[currentPage].title && (
                   <motion.h1 
-                    className={`${config.pages[currentPage].id === 1 ? 'text-4xl md:text-8xl' : config.pages[currentPage].styles.titleSize} ${config.pages[currentPage].styles.fontFamily} font-bold tracking-tighter whitespace-pre-wrap break-words ${config.pages[currentPage].id === 1 ? 'hero-page-title' : ''}`}
+                    className={`${config.pages[currentPage].styles.titleSize} ${config.pages[currentPage].styles.fontFamily} font-bold tracking-tighter whitespace-pre-wrap break-words ${config.pages[currentPage].id === 1 ? 'hero-page-title' : ''}`}
                     style={{ color: config.pages[currentPage].styles.titleColor }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -199,7 +196,7 @@ function MainContent() {
                 )}
                 {config.pages[currentPage].description && (
                   <motion.p 
-                    className={`${config.pages[currentPage].id === 5 ? 'text-lg md:text-4xl' : config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl page-2-description font-serif' : 'max-w-2xl text-balance'} mx-auto whitespace-pre-wrap break-words`}
+                    className={`${config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl page-2-description font-serif' : 'max-w-2xl text-balance'} mx-auto whitespace-pre-wrap break-words`}
                     style={{ color: config.pages[currentPage].styles.descriptionColor }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

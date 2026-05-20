@@ -9,17 +9,35 @@ export function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  // For trailing effect
-  const trailing1X = useSpring(cursorX, { stiffness: 120, damping: 20 });
-  const trailing1Y = useSpring(cursorY, { stiffness: 120, damping: 20 });
-  const trailing2X = useSpring(cursorX, { stiffness: 100, damping: 22 });
-  const trailing2Y = useSpring(cursorY, { stiffness: 100, damping: 22 });
-  const trailing3X = useSpring(cursorX, { stiffness: 80, damping: 24 });
-  const trailing3Y = useSpring(cursorY, { stiffness: 80, damping: 24 });
-  const trailing4X = useSpring(cursorX, { stiffness: 60, damping: 26 });
-  const trailing4Y = useSpring(cursorY, { stiffness: 60, damping: 26 });
-  const trailing5X = useSpring(cursorX, { stiffness: 40, damping: 28 });
-  const trailing5Y = useSpring(cursorY, { stiffness: 40, damping: 28 });
+  // For trailing effect (10 dots for a denser trail)
+  const dotConfigs = [
+    { s: 120, d: 20 }, { s: 115, d: 21 }, { s: 110, d: 22 }, { s: 105, d: 23 }, { s: 100, d: 24 },
+    { s: 95, d: 25 }, { s: 90, d: 26 }, { s: 85, d: 27 }, { s: 80, d: 28 }, { s: 75, d: 29 }
+  ];
+
+  const trailingX1 = useSpring(cursorX, dotConfigs[0]); const trailingY1 = useSpring(cursorY, dotConfigs[0]);
+  const trailingX2 = useSpring(cursorX, dotConfigs[1]); const trailingY2 = useSpring(cursorY, dotConfigs[1]);
+  const trailingX3 = useSpring(cursorX, dotConfigs[2]); const trailingY3 = useSpring(cursorY, dotConfigs[2]);
+  const trailingX4 = useSpring(cursorX, dotConfigs[3]); const trailingY4 = useSpring(cursorY, dotConfigs[3]);
+  const trailingX5 = useSpring(cursorX, dotConfigs[4]); const trailingY5 = useSpring(cursorY, dotConfigs[4]);
+  const trailingX6 = useSpring(cursorX, dotConfigs[5]); const trailingY6 = useSpring(cursorY, dotConfigs[5]);
+  const trailingX7 = useSpring(cursorX, dotConfigs[6]); const trailingY7 = useSpring(cursorY, dotConfigs[6]);
+  const trailingX8 = useSpring(cursorX, dotConfigs[7]); const trailingY8 = useSpring(cursorY, dotConfigs[7]);
+  const trailingX9 = useSpring(cursorX, dotConfigs[8]); const trailingY9 = useSpring(cursorY, dotConfigs[8]);
+  const trailingX10 = useSpring(cursorX, dotConfigs[9]); const trailingY10 = useSpring(cursorY, dotConfigs[9]);
+
+  const trailingDots = [
+    { x: trailingX1, y: trailingY1, size: 6, opacity: 0.2 },
+    { x: trailingX2, y: trailingY2, size: 5.5, opacity: 0.18 },
+    { x: trailingX3, y: trailingY3, size: 5, opacity: 0.15 },
+    { x: trailingX4, y: trailingY4, size: 4.5, opacity: 0.12 },
+    { x: trailingX5, y: trailingY5, size: 4, opacity: 0.1 },
+    { x: trailingX6, y: trailingY6, size: 3.5, opacity: 0.08 },
+    { x: trailingX7, y: trailingY7, size: 3, opacity: 0.06 },
+    { x: trailingX8, y: trailingY8, size: 2.5, opacity: 0.04 },
+    { x: trailingX9, y: trailingY9, size: 2, opacity: 0.03 },
+    { x: trailingX10, y: trailingY10, size: 1.5, opacity: 0.02 },
+  ];
 
   useEffect(() => {
     const checkMobile = () => {
@@ -99,30 +117,21 @@ export function CustomCursor() {
   return (
     <>
       {/* Trailing Dots (Only on Mobile) */}
-      {isMobile && (
-        <>
-          <motion.div
-            className="fixed top-0 left-0 z-[9998] pointer-events-none w-6 h-6 rounded-full bg-blue-400 opacity-20"
-            style={{ x: trailing1X, y: trailing1Y, translateX: '-50%', translateY: '-50%' }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 z-[9997] pointer-events-none w-5 h-5 rounded-full bg-blue-400 opacity-15"
-            style={{ x: trailing2X, y: trailing2Y, translateX: '-50%', translateY: '-50%' }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 z-[9996] pointer-events-none w-4 h-4 rounded-full bg-blue-300 opacity-10"
-            style={{ x: trailing3X, y: trailing3Y, translateX: '-50%', translateY: '-50%' }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 z-[9995] pointer-events-none w-3.5 h-3.5 rounded-full bg-blue-300 opacity-5"
-            style={{ x: trailing4X, y: trailing4Y, translateX: '-50%', translateY: '-50%' }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 z-[9994] pointer-events-none w-3 h-3 rounded-full bg-blue-200 opacity-5"
-            style={{ x: trailing5X, y: trailing5Y, translateX: '-50%', translateY: '-50%' }}
-          />
-        </>
-      )}
+      {isMobile && trailingDots.map((dot, index) => (
+        <motion.div
+          key={index}
+          className="fixed top-0 left-0 z-[9998] pointer-events-none rounded-full bg-blue-500"
+          style={{ 
+            x: dot.x, 
+            y: dot.y, 
+            width: dot.size * 4, 
+            height: dot.size * 4, 
+            opacity: dot.opacity,
+            translateX: '-50%', 
+            translateY: '-50%' 
+          }}
+        />
+      ))}
 
       <motion.div
         className="cursor-fixed-dot fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center"
@@ -139,11 +148,11 @@ export function CustomCursor() {
               key="orange-cursor"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ 
-                scale: isNavArrow ? (isMobile ? 0.3 : 0.5) : 0.8, 
+                scale: isNavArrow ? (isMobile ? 0.3 : 0.5) : 0.7, 
                 opacity: 1 
               }}
               exit={{ scale: 0, opacity: 0 }}
-              className={`${isMobile ? 'w-16 h-16' : 'w-24 h-24'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
+              className={`${isMobile ? 'w-12 h-12' : 'w-24 h-24'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
             >
               {!isNavArrow && (
                 <span className={`${isMobile ? 'text-xs' : 'text-lg'} text-white font-bold uppercase tracking-widest`}>go</span>
