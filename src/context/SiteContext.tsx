@@ -19,8 +19,11 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // 1. Try to load from localStorage first for immediate persistence,
     // but only if the bundled config hasn't updated in a new deployment.
-    const savedConfig = localStorage.getItem('bmg_studio_config_fallback_v3');
-    const originalBundledStr = localStorage.getItem('bmg_studio_config_fallback_v3_bundled_original');
+    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v4';
+    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v4_bundled_original';
+
+    const savedConfig = localStorage.getItem(CURRENT_CACHE_KEY);
+    const originalBundledStr = localStorage.getItem(CURRENT_ORIGINAL_KEY);
     const currentBundledStr = JSON.stringify(INITIAL_CONFIG);
 
     let useFallback = false;
@@ -32,15 +35,28 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       } catch (err) {
         console.error('Failed to parse saved config:', err);
       }
-    } else if (savedConfig && originalBundledStr !== currentBundledStr) {
-      console.log('New site deployment detected. Clearing outdated browser cache to fetch latest config.');
-      localStorage.removeItem('bmg_studio_config_fallback_v3');
-      localStorage.removeItem('bmg_studio_config_fallback_v3_bundled_original');
+    } else {
+      // Clear all legacy and current config cache keys to ensure a completely clean slate
+      const keysToClear = [
+        'bmg_studio_config_fallback_v2',
+        'bmg_studio_config_fallback_v3',
+        'bmg_studio_config_fallback_v3_bundled_original',
+        CURRENT_CACHE_KEY,
+        CURRENT_ORIGINAL_KEY
+      ];
+      keysToClear.forEach(key => {
+        try {
+          localStorage.removeItem(key);
+        } catch (e) {
+          console.warn('Failed clearing key:', key, e);
+        }
+      });
+      console.log('Detected fresh deployment or mismatch. Cleared configuration cache.');
     }
 
     if (!useFallback) {
       try {
-        localStorage.setItem('bmg_studio_config_fallback_v3_bundled_original', currentBundledStr);
+        localStorage.setItem(CURRENT_ORIGINAL_KEY, currentBundledStr);
       } catch (e) {
         console.warn('Failed to store bundled original in localStorage:', e);
       }
@@ -61,8 +77,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       .then(data => {
         if (data && !data.error) {
           setConfig(data);
-          localStorage.setItem('bmg_studio_config_fallback_v3', JSON.stringify(data));
-          localStorage.setItem('bmg_studio_config_fallback_v3_bundled_original', JSON.stringify(INITIAL_CONFIG));
+          localStorage.setItem('bmg_studio_config_fallback_v4', JSON.stringify(data));
+          localStorage.setItem('bmg_studio_config_fallback_v4_bundled_original', JSON.stringify(INITIAL_CONFIG));
         }
       })
       .catch(err => {
@@ -74,8 +90,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   const updateConfig = async (newConfig: SiteConfig) => {
     setConfig(newConfig);
-    localStorage.setItem('bmg_studio_config_fallback_v3', JSON.stringify(newConfig));
-    localStorage.setItem('bmg_studio_config_fallback_v3_bundled_original', JSON.stringify(INITIAL_CONFIG));
+    localStorage.setItem('bmg_studio_config_fallback_v4', JSON.stringify(newConfig));
+    localStorage.setItem('bmg_studio_config_fallback_v4_bundled_original', JSON.stringify(INITIAL_CONFIG));
     try {
       const response = await fetch('/api/config', {
         method: 'POST',
