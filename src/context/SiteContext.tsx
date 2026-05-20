@@ -19,8 +19,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // 1. Try to load from localStorage first for immediate persistence,
     // but only if the bundled config hasn't updated in a new deployment.
-    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v4';
-    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v4_bundled_original';
+    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v5';
+    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v5_bundled_original';
 
     const savedConfig = localStorage.getItem(CURRENT_CACHE_KEY);
     const originalBundledStr = localStorage.getItem(CURRENT_ORIGINAL_KEY);
@@ -41,6 +41,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         'bmg_studio_config_fallback_v2',
         'bmg_studio_config_fallback_v3',
         'bmg_studio_config_fallback_v3_bundled_original',
+        'bmg_studio_config_fallback_v4',
+        'bmg_studio_config_fallback_v4_bundled_original',
         CURRENT_CACHE_KEY,
         CURRENT_ORIGINAL_KEY
       ];
@@ -77,8 +79,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       .then(data => {
         if (data && !data.error) {
           setConfig(data);
-          localStorage.setItem('bmg_studio_config_fallback_v4', JSON.stringify(data));
-          localStorage.setItem('bmg_studio_config_fallback_v4_bundled_original', JSON.stringify(INITIAL_CONFIG));
+          localStorage.setItem('bmg_studio_config_fallback_v5', JSON.stringify(data));
+          localStorage.setItem('bmg_studio_config_fallback_v5_bundled_original', JSON.stringify(INITIAL_CONFIG));
         }
       })
       .catch(err => {
@@ -90,8 +92,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   const updateConfig = async (newConfig: SiteConfig) => {
     setConfig(newConfig);
-    localStorage.setItem('bmg_studio_config_fallback_v4', JSON.stringify(newConfig));
-    localStorage.setItem('bmg_studio_config_fallback_v4_bundled_original', JSON.stringify(INITIAL_CONFIG));
+    localStorage.setItem('bmg_studio_config_fallback_v5', JSON.stringify(newConfig));
+    localStorage.setItem('bmg_studio_config_fallback_v5_bundled_original', JSON.stringify(INITIAL_CONFIG));
     try {
       const response = await fetch('/api/config', {
         method: 'POST',
