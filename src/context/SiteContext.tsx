@@ -17,17 +17,21 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Try to load from localStorage first for immediate persistence,
-    // but only if the bundled config hasn't updated in a new deployment.
-    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v5';
-    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v5_bundled_original';
+    // We use version-controlled keys to separate caches and cleanly reset on new deployments
+    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v6';
+    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v6_bundled_original';
+    const ADMIN_ACTIVE_KEY = 'bmg_studio_admin_active_v6';
 
     const savedConfig = localStorage.getItem(CURRENT_CACHE_KEY);
     const originalBundledStr = localStorage.getItem(CURRENT_ORIGINAL_KEY);
     const currentBundledStr = JSON.stringify(INITIAL_CONFIG);
+    const isAdminActive = localStorage.getItem(ADMIN_ACTIVE_KEY) === 'true';
 
     let useFallback = false;
-    if (savedConfig && originalBundledStr === currentBundledStr) {
+    
+    // Only load from localStorage if the user has active admin privileges (e.g. they are testing)
+    // AND the static bundle hasn't been updated since the last build.
+    if (isAdminActive && savedConfig && originalBundledStr === currentBundledStr) {
       try {
         const parsed = JSON.parse(savedConfig);
         setConfig(parsed);
@@ -36,13 +40,15 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         console.error('Failed to parse saved config:', err);
       }
     } else {
-      // Clear all legacy and current config cache keys to ensure a completely clean slate
+      // Clear legacy and current cache keys to preserve clean environment state
       const keysToClear = [
         'bmg_studio_config_fallback_v2',
         'bmg_studio_config_fallback_v3',
         'bmg_studio_config_fallback_v3_bundled_original',
         'bmg_studio_config_fallback_v4',
         'bmg_studio_config_fallback_v4_bundled_original',
+        'bmg_studio_config_fallback_v5',
+        'bmg_studio_config_fallback_v5_bundled_original',
         CURRENT_CACHE_KEY,
         CURRENT_ORIGINAL_KEY
       ];
@@ -53,7 +59,16 @@ export function SiteProvider({ children }: { children: ReactNode }) {
           console.warn('Failed clearing key:', key, e);
         }
       });
-      console.log('Detected fresh deployment or mismatch. Cleared configuration cache.');
+      
+      // Reset admin active flag if bundle has been updated or if this was a plain visitor
+      if (!isAdminActive || originalBundledStr !== currentBundledStr) {
+        try {
+          localStorage.removeItem(ADMIN_ACTIVE_KEY);
+        } catch (e) {
+          console.warn('Failed clearing admin active key:', e);
+        }
+      }
+      console.log('Clean slate loaded: using freshly compiled production configurations.');
     }
 
     if (!useFallback) {
@@ -64,7 +79,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // 2. Then try to fetch from API for potential server-side updates
+    // 2. Then try to fetch from API for potential server-side updates (works on active containers)
     fetch(`/api/config?t=${Date.now()}`)
       .then(res => {
         if (!res.ok) {
@@ -79,12 +94,12 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       .then(data => {
         if (data && !data.error) {
           setConfig(data);
-          localStorage.setItem('bmg_studio_config_fallback_v5', JSON.stringify(data));
-          localStorage.setItem('bmg_studio_config_fallback_v5_bundled_original', JSON.stringify(INITIAL_CONFIG));
+          localStorage.setItem('bmg_studio_config_fallback_v6', JSON.stringify(data));
+          localStorage.setItem('bmg_studio_config_fallback_v6_bundled_original', JSON.stringify(INITIAL_CONFIG));
         }
       })
       .catch(err => {
-        // Expected to fail on static hosts like GitHub/Netlify
+        // Expected to fail on static hosts like GitHub/Netlify, graceful fallback is already current state
         console.log('API config fetch skipped or failed (likely static deployment):', err instanceof Error ? err.message : err);
       })
       .finally(() => setIsLoading(false));
@@ -92,8 +107,18 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   const updateConfig = async (newConfig: SiteConfig) => {
     setConfig(newConfig);
-    localStorage.setItem('bmg_studio_config_fallback_v5', JSON.stringify(newConfig));
-    localStorage.setItem('bmg_studio_config_fallback_v5_bundled_original', JSON.stringify(INITIAL_CONFIG));
+    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v6';
+    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v6_bundled_original';
+    const ADMIN_ACTIVE_KEY = 'bmg_studio_admin_active_v6';
+
+    try {
+      localStorage.setItem(CURRENT_CACHE_KEY, JSON.stringify(newConfig));
+      localStorage.setItem(CURRENT_ORIGINAL_KEY, JSON.stringify(INITIAL_CONFIG));
+      localStorage.setItem(ADMIN_ACTIVE_KEY, 'true');
+    } catch (e) {
+      console.warn('Failed writing keys to localStorage:', e);
+    }
+
     try {
       const response = await fetch('/api/config', {
         method: 'POST',
@@ -103,11 +128,15 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       if (!response.ok) throw new Error('Failed to save to server');
     } catch (err) {
       console.error('Failed to save config to server:', err);
-      // We still updated local state and localStorage, so it's "saved" for the user session
     }
   };
 
   const resetConfig = () => {
+    try {
+      localStorage.removeItem('bmg_studio_admin_active_v6');
+    } catch (e) {
+      console.warn('Failed clearing admin active key:', e);
+    }
     updateConfig(INITIAL_CONFIG);
   };
 
