@@ -10,6 +10,7 @@ function MainContent() {
   const [currentPage, setCurrentPage] = useState(0);
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isMainMediaHovered, setIsMainMediaHovered] = useState(false);
   const totalPages = config.pages.length;
 
   const handleNext = useCallback(() => {
@@ -24,6 +25,10 @@ function MainContent() {
       setDirection(-1);
       setCurrentPage((prev) => prev - 1);
     }
+  }, [currentPage]);
+
+  useEffect(() => {
+    setIsMainMediaHovered(false);
   }, [currentPage]);
 
   useEffect(() => {
@@ -43,18 +48,28 @@ function MainContent() {
       <CustomCursor />
       
       {/* Logo */}
-      <div className="absolute top-4 left-4 md:top-8 md:left-8 z-50">
-        <button 
-          onClick={() => setCurrentPage(0)}
-          className="group focus:outline-none cursor-none"
-        >
-          <img 
-            src={config.logoUrl} 
-            alt="Logo" 
-            className="h-10 md:h-20 w-auto object-contain transition-transform group-hover:scale-105"
-          />
-        </button>
-      </div>
+      <AnimatePresence>
+        {currentPage !== 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            className="absolute top-4 left-4 md:top-8 md:left-8 z-50"
+          >
+            <button 
+              onClick={() => setCurrentPage(0)}
+              className="group focus:outline-none cursor-none"
+            >
+              <img 
+                src={config.logoUrl} 
+                alt="Logo" 
+                className="h-10 md:h-20 w-auto object-contain transition-transform group-hover:scale-105"
+              />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Admin Trigger */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
@@ -71,15 +86,17 @@ function MainContent() {
       {/* Navigation Arrows */}
       <AnimatePresence>
         {currentPage > 0 && (
-            <motion.button 
+          <motion.button 
             initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 0.4, x: 0 }}
+            whileHover={{ opacity: 1, scale: 1.1 }}
             exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
             onClick={handlePrev}
-            className="nav-arrow absolute left-0 md:left-12 top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 hover:scale-110 transition-transform focus:outline-none cursor-none md:bg-transparent md:backdrop-blur-none md:shadow-none"
+            className="nav-arrow absolute left-0 md:left-12 top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 focus:outline-none cursor-none md:bg-transparent md:backdrop-blur-none md:shadow-none"
             aria-label="Previous page"
           >
-            <ChevronLeft size={36} className="md:w-16 md:h-16" strokeWidth={1} />
+            <ChevronLeft size={36} className="md:w-16 md:h-16" strokeWidth={1} style={{ color: 'rgb(93, 55, 42)' }} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -88,13 +105,15 @@ function MainContent() {
         {currentPage < totalPages - 1 && (
           <motion.button 
             initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 0.4, x: 0 }}
+            whileHover={{ opacity: 1, scale: 1.1 }}
             exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
             onClick={handleNext}
-            className="nav-arrow absolute right-0 md:right-12 top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 hover:scale-110 transition-transform focus:outline-none cursor-none md:bg-transparent md:backdrop-blur-none md:shadow-none"
+            className="nav-arrow absolute right-0 md:right-12 top-1/2 -translate-y-1/2 z-40 p-2 md:p-4 focus:outline-none cursor-none md:bg-transparent md:backdrop-blur-none md:shadow-none"
             aria-label="Next page"
           >
-            <ChevronRight size={36} className="md:w-16 md:h-16" strokeWidth={1} />
+            <ChevronRight size={36} className="md:w-16 md:h-16" strokeWidth={1} style={{ color: 'rgb(93, 55, 42)' }} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -129,12 +148,13 @@ function MainContent() {
             <div className="max-w-7xl w-full flex flex-col items-center gap-6 md:gap-12">
               {/* Media Section */}
               <motion.div 
-                className={`relative overflow-hidden group orange-hover flex items-center justify-center
+                className={`relative overflow-hidden group flex items-center justify-center
+                  ${config.pages[currentPage].id !== 1 ? 'orange-hover' : ''}
                   ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none border-none' : 'rounded-lg shadow-2xl'}
-                  ${config.pages[currentPage].id === 3 ? 'w-fit max-w-[70vw] md:max-w-2xl' : ''}
+                  ${[3, 4].includes(config.pages[currentPage].id) ? 'w-fit max-w-[70vw] md:max-w-2xl' : ''}
                   ${config.pages[currentPage].mediaType === 'video' ? 'w-full md:w-[85%] aspect-video h-auto max-h-[60vh] md:max-h-[80vh] bg-black' : ''}
                   ${[2, 5].includes(config.pages[currentPage].id) ? 'w-[40%] md:w-[25%]' : ''}
-                  ${[2, 3, 5].includes(config.pages[currentPage].id) ? 'h-auto max-h-[45vh] md:max-h-[60vh]' : ''}
+                  ${[2, 3, 4, 5].includes(config.pages[currentPage].id) ? 'h-auto max-h-[45vh] md:max-h-[60vh]' : ''}
                 `}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -143,16 +163,32 @@ function MainContent() {
                     window.open(config.pages[currentPage].externalLink, '_blank');
                   }
                 }}
+                onMouseEnter={() => setIsMainMediaHovered(true)}
+                onMouseLeave={() => setIsMainMediaHovered(false)}
               >
                 {config.pages[currentPage].mediaType === 'image' ? (
-                  <img 
-                    src={config.pages[currentPage].mediaUrl} 
-                    alt={config.pages[currentPage].title}
-                    className={`max-w-full max-h-full object-contain transition-transform duration-700 
-                      ${config.pages[currentPage].id === 1 ? '' : 'group-hover:scale-105'}
-                      ${config.pages[currentPage].id === 3 ? 'block w-auto h-auto' : ''}
-                    `}
-                  />
+                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                    <img 
+                      src={config.pages[currentPage].mediaUrl} 
+                      alt={config.pages[currentPage].title}
+                      className={`max-w-full max-h-full object-contain transition-all duration-700 
+                        ${config.pages[currentPage].id === 1 ? '' : 'group-hover:scale-105'}
+                        ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
+                        ${config.pages[currentPage].mediaUrlHover && isMainMediaHovered ? 'opacity-0' : 'opacity-100'}
+                      `}
+                    />
+                    {config.pages[currentPage].mediaUrlHover && (
+                      <img 
+                        src={config.pages[currentPage].mediaUrlHover} 
+                        alt={`${config.pages[currentPage].title} Hover`}
+                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-700 
+                          ${config.pages[currentPage].id === 1 ? '' : 'group-hover:scale-105'}
+                          ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
+                          ${isMainMediaHovered ? 'opacity-100' : 'opacity-0'}
+                        `}
+                      />
+                    )}
+                  </div>
                 ) : (
                   <div className="relative w-full aspect-video flex items-center justify-center overflow-hidden bg-black">
                     {config.pages[currentPage].mediaUrl.includes('drive.google.com') ? (

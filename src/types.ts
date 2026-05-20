@@ -3,6 +3,7 @@ export interface PageConfig {
   title: string;
   description: string;
   mediaUrl: string;
+  mediaUrlHover?: string;
   mediaType: 'image' | 'video';
   externalLink?: string;
   styles: {

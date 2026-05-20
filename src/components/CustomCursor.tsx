@@ -9,10 +9,14 @@ export function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  // For trailing effect (10 dots for a denser trail)
+  // For trailing effect (6 dots for a denser, tighter trail on mobile)
   const dotConfigs = [
-    { s: 120, d: 20 }, { s: 115, d: 21 }, { s: 110, d: 22 }, { s: 105, d: 23 }, { s: 100, d: 24 },
-    { s: 95, d: 25 }, { s: 90, d: 26 }, { s: 85, d: 27 }, { s: 80, d: 28 }, { s: 75, d: 29 }
+    { stiffness: 200, damping: 24 },
+    { stiffness: 180, damping: 23 },
+    { stiffness: 160, damping: 22 },
+    { stiffness: 140, damping: 21 },
+    { stiffness: 120, damping: 20 },
+    { stiffness: 100, damping: 19 }
   ];
 
   const trailingX1 = useSpring(cursorX, dotConfigs[0]); const trailingY1 = useSpring(cursorY, dotConfigs[0]);
@@ -21,22 +25,14 @@ export function CustomCursor() {
   const trailingX4 = useSpring(cursorX, dotConfigs[3]); const trailingY4 = useSpring(cursorY, dotConfigs[3]);
   const trailingX5 = useSpring(cursorX, dotConfigs[4]); const trailingY5 = useSpring(cursorY, dotConfigs[4]);
   const trailingX6 = useSpring(cursorX, dotConfigs[5]); const trailingY6 = useSpring(cursorY, dotConfigs[5]);
-  const trailingX7 = useSpring(cursorX, dotConfigs[6]); const trailingY7 = useSpring(cursorY, dotConfigs[6]);
-  const trailingX8 = useSpring(cursorX, dotConfigs[7]); const trailingY8 = useSpring(cursorY, dotConfigs[7]);
-  const trailingX9 = useSpring(cursorX, dotConfigs[8]); const trailingY9 = useSpring(cursorY, dotConfigs[8]);
-  const trailingX10 = useSpring(cursorX, dotConfigs[9]); const trailingY10 = useSpring(cursorY, dotConfigs[9]);
 
   const trailingDots = [
-    { x: trailingX1, y: trailingY1, size: 6, opacity: 0.2 },
-    { x: trailingX2, y: trailingY2, size: 5.5, opacity: 0.18 },
-    { x: trailingX3, y: trailingY3, size: 5, opacity: 0.15 },
-    { x: trailingX4, y: trailingY4, size: 4.5, opacity: 0.12 },
-    { x: trailingX5, y: trailingY5, size: 4, opacity: 0.1 },
-    { x: trailingX6, y: trailingY6, size: 3.5, opacity: 0.08 },
-    { x: trailingX7, y: trailingY7, size: 3, opacity: 0.06 },
-    { x: trailingX8, y: trailingY8, size: 2.5, opacity: 0.04 },
-    { x: trailingX9, y: trailingY9, size: 2, opacity: 0.03 },
-    { x: trailingX10, y: trailingY10, size: 1.5, opacity: 0.02 },
+    { x: trailingX1, y: trailingY1, size: 6, opacity: 0.25 },
+    { x: trailingX2, y: trailingY2, size: 5.2, opacity: 0.20 },
+    { x: trailingX3, y: trailingY3, size: 4.4, opacity: 0.16 },
+    { x: trailingX4, y: trailingY4, size: 3.6, opacity: 0.12 },
+    { x: trailingX5, y: trailingY5, size: 2.8, opacity: 0.08 },
+    { x: trailingX6, y: trailingY6, size: 2.0, opacity: 0.04 },
   ];
 
   useEffect(() => {

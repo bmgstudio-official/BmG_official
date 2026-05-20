@@ -18,7 +18,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // 1. Try to load from localStorage first for immediate persistence
-    const savedConfig = localStorage.getItem('bmg_studio_config_fallback_v2');
+    const savedConfig = localStorage.getItem('bmg_studio_config_fallback_v3');
     if (savedConfig) {
       try {
         const parsed = JSON.parse(savedConfig);
@@ -30,23 +30,32 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
     // 2. Then try to fetch from API for potential server-side updates
     fetch(`/api/config?t=${Date.now()}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Not JSON content');
+        }
+        return res.json();
+      })
       .then(data => {
         if (data && !data.error) {
           setConfig(data);
-          localStorage.setItem('bmg_studio_config_fallback_v2', JSON.stringify(data));
+          localStorage.setItem('bmg_studio_config_fallback_v3', JSON.stringify(data));
         }
       })
       .catch(err => {
         // Expected to fail on static hosts like GitHub/Netlify
-        console.log('API config fetch skipped or failed (likely static deployment)');
+        console.log('API config fetch skipped or failed (likely static deployment):', err instanceof Error ? err.message : err);
       })
       .finally(() => setIsLoading(false));
   }, []);
 
   const updateConfig = async (newConfig: SiteConfig) => {
     setConfig(newConfig);
-    localStorage.setItem('bmg_studio_config_fallback_v2', JSON.stringify(newConfig));
+    localStorage.setItem('bmg_studio_config_fallback_v3', JSON.stringify(newConfig));
     try {
       const response = await fetch('/api/config', {
         method: 'POST',

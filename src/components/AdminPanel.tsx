@@ -268,6 +268,18 @@ export function AdminPanel({ onClose }: AdminPanelProps) {
                               placeholder="https://gmail.com or https://vimeo.com/..."
                             />
                           </div>
+                          {page.mediaType === 'image' && (
+                            <div className="space-y-2 md:col-span-2">
+                              <label className="text-xs font-semibold text-gray-600">ROLLOVER IMAGE URL (OPTIONAL)</label>
+                              <input 
+                                type="text" 
+                                value={page.mediaUrlHover || ''}
+                                onChange={(e) => updatePage(page.id, { mediaUrlHover: e.target.value })}
+                                className="w-full p-2 border border-gray-200 rounded-lg text-xs"
+                                placeholder="https://... (Image shown when hovering)"
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
