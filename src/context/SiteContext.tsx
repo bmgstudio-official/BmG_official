@@ -17,7 +17,18 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Try to load from API first to get real-time updates in dev
+    // 1. Try to load from localStorage first for immediate persistence
+    const savedConfig = localStorage.getItem('bmg_studio_config_fallback_v2');
+    if (savedConfig) {
+      try {
+        const parsed = JSON.parse(savedConfig);
+        setConfig(parsed);
+      } catch (err) {
+        console.error('Failed to parse saved config:', err);
+      }
+    }
+
+    // 2. Then try to fetch from API for potential server-side updates
     fetch(`/api/config?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
@@ -27,7 +38,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         }
       })
       .catch(err => {
-        console.error('Failed to fetch config:', err);
+        // Expected to fail on static hosts like GitHub/Netlify
+        console.log('API config fetch skipped or failed (likely static deployment)');
       })
       .finally(() => setIsLoading(false));
   }, []);

@@ -186,7 +186,7 @@ function MainContent() {
               <div className="space-y-4 w-full">
                 {config.pages[currentPage].title && (
                   <motion.h1 
-                    className={`${config.pages[currentPage].styles.titleSize} ${config.pages[currentPage].styles.fontFamily} font-bold tracking-tighter whitespace-pre-wrap break-words ${config.pages[currentPage].id === 1 ? 'hero-page-title' : ''}`}
+                    className={`${config.pages[currentPage].styles.titleSize} ${config.pages[currentPage].styles.fontFamily} font-bold tracking-tighter whitespace-pre-wrap break-words`}
                     style={{ color: config.pages[currentPage].styles.titleColor }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
