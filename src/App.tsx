@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
 import { SiteProvider, useSite } from './context/SiteContext';
-import { ChevronLeft, ChevronRight, Settings, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Settings, ExternalLink, MoveHorizontal } from 'lucide-react';
 import { AdminPanel } from './components/AdminPanel';
 import { CustomCursor } from './components/CustomCursor';
 
@@ -246,7 +246,31 @@ function MainContent() {
         </AnimatePresence>
       </div>
 
-              {/* Pagination Dots */}
+      {/* Swipe Indicator for Mobile */}
+      {currentPage === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className="md:hidden absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-40 pointer-events-none"
+        >
+          <motion.div
+            animate={{ x: [-10, 10, -10] }}
+            transition={{
+              repeat: Infinity,
+              duration: 2.2,
+              ease: "easeInOut"
+            }}
+          >
+            <MoveHorizontal size={18} style={{ color: '#ff4d00' }} className="opacity-90" />
+          </motion.div>
+          <span className="text-[9px] font-sans tracking-[0.25em] pl-[0.25em] text-[#ff4d00]/80 uppercase font-medium">
+            Swipe
+          </span>
+        </motion.div>
+      )}
+
+      {/* Pagination Dots */}
       <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 flex gap-3 md:gap-4 z-40">
         {config.pages.map((_, idx) => (
           <button
