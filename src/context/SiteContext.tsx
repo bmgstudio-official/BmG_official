@@ -18,9 +18,9 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // We use version-controlled keys to separate caches and cleanly reset on new deployments
-    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v6';
-    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v6_bundled_original';
-    const ADMIN_ACTIVE_KEY = 'bmg_studio_admin_active_v6';
+    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v7';
+    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v7_bundled_original';
+    const ADMIN_ACTIVE_KEY = 'bmg_studio_admin_active_v7';
 
     const savedConfig = localStorage.getItem(CURRENT_CACHE_KEY);
     const originalBundledStr = localStorage.getItem(CURRENT_ORIGINAL_KEY);
@@ -49,6 +49,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
         'bmg_studio_config_fallback_v4_bundled_original',
         'bmg_studio_config_fallback_v5',
         'bmg_studio_config_fallback_v5_bundled_original',
+        'bmg_studio_config_fallback_v6',
+        'bmg_studio_config_fallback_v6_bundled_original',
         CURRENT_CACHE_KEY,
         CURRENT_ORIGINAL_KEY
       ];
@@ -94,8 +96,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       .then(data => {
         if (data && !data.error) {
           setConfig(data);
-          localStorage.setItem('bmg_studio_config_fallback_v6', JSON.stringify(data));
-          localStorage.setItem('bmg_studio_config_fallback_v6_bundled_original', JSON.stringify(INITIAL_CONFIG));
+          localStorage.setItem('bmg_studio_config_fallback_v7', JSON.stringify(data));
+          localStorage.setItem('bmg_studio_config_fallback_v7_bundled_original', JSON.stringify(INITIAL_CONFIG));
         }
       })
       .catch(err => {
@@ -107,9 +109,9 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   const updateConfig = async (newConfig: SiteConfig) => {
     setConfig(newConfig);
-    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v6';
-    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v6_bundled_original';
-    const ADMIN_ACTIVE_KEY = 'bmg_studio_admin_active_v6';
+    const CURRENT_CACHE_KEY = 'bmg_studio_config_fallback_v7';
+    const CURRENT_ORIGINAL_KEY = 'bmg_studio_config_fallback_v7_bundled_original';
+    const ADMIN_ACTIVE_KEY = 'bmg_studio_admin_active_v7';
 
     try {
       localStorage.setItem(CURRENT_CACHE_KEY, JSON.stringify(newConfig));
@@ -133,7 +135,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   const resetConfig = () => {
     try {
-      localStorage.removeItem('bmg_studio_admin_active_v6');
+      localStorage.removeItem('bmg_studio_admin_active_v7');
     } catch (e) {
       console.warn('Failed clearing admin active key:', e);
     }

@@ -1,9 +1,22 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
 import { SiteProvider, useSite } from './context/SiteContext';
-import { ChevronLeft, ChevronRight, Settings, ExternalLink, MoveHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Settings, ExternalLink, MoveHorizontal, X, FileText } from 'lucide-react';
 import { AdminPanel } from './components/AdminPanel';
 import { CustomCursor } from './components/CustomCursor';
+
+const getGoogleDriveFileId = (url: string): string | null => {
+  if (!url) return null;
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return match[1];
+  }
+  const dMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (dMatch && dMatch[1]) {
+    return dMatch[1];
+  }
+  return null;
+};
 
 function MainContent() {
   const { config } = useSite();
@@ -11,6 +24,9 @@ function MainContent() {
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isMainMediaHovered, setIsMainMediaHovered] = useState(false);
+  const [activePdfId, setActivePdfId] = useState<string | null>(null);
+  const [activePdfTitle, setActivePdfTitle] = useState<string>('');
+  const [isPdfLoading, setIsPdfLoading] = useState(true);
   const totalPages = config.pages.length;
 
   const handleNext = useCallback(() => {
@@ -33,6 +49,9 @@ function MainContent() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActivePdfId(null);
+      }
       if (e.key === 'ArrowRight') handleNext();
       if (e.key === 'ArrowLeft') handlePrev();
     };
@@ -159,8 +178,27 @@ function MainContent() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 onClick={() => {
-                  if (config.pages[currentPage].externalLink) {
-                    window.open(config.pages[currentPage].externalLink, '_blank');
+                  const rawLink = config.pages[currentPage].externalLink;
+                  if (rawLink) {
+                    const driveId = getGoogleDriveFileId(rawLink);
+                    if (driveId) {
+                      const titleLower = (config.pages[currentPage].title || '').toLowerCase();
+                      const isVideo = titleLower.includes('showreel') || 
+                                      titleLower.includes('video') || 
+                                      titleLower.includes('film') || 
+                                      config.pages[currentPage].id === 4;
+                      
+                      if (isVideo) {
+                        // For videos on Google Drive, open using Google Drive's built-in player
+                        window.open(`https://drive.google.com/file/d/${driveId}/view?usp=sharing`, '_blank');
+                      } else {
+                        // For documents/PDFs (like page 3 Artworks), open with the direct embedding viewer
+                        const directViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(`https://drive.google.com/uc?id=${driveId}`)}&embedded=true`;
+                        window.open(directViewerUrl, '_blank');
+                      }
+                    } else {
+                      window.open(rawLink, '_blank');
+                    }
                   }
                 }}
                 onMouseEnter={() => setIsMainMediaHovered(true)}
@@ -288,6 +326,76 @@ function MainContent() {
           />
         ))}
       </div>
+
+      {/* PDF Lightbox Modal */}
+      <AnimatePresence>
+        {activePdfId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/85 z-[100] flex items-center justify-center p-3 md:p-8 backdrop-blur-md cursor-auto"
+            onClick={() => setActivePdfId(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-6xl h-[88vh] bg-[#FFF8F2] rounded-2xl shadow-2xl overflow-hidden flex flex-col cursor-default border border-gray-200/20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex justify-between items-center px-4 md:px-8 py-4 border-b border-gray-100/60 bg-[#FFEEDF]/60 backdrop-blur-md">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="p-1 px-2 rounded bg-[#ff4d00]/10">
+                    <FileText size={16} className="text-[#ff4d00]" />
+                  </div>
+                  <span className="text-[11px] md:text-sm font-sans font-bold text-gray-800 tracking-[0.1em] uppercase">
+                    {activePdfTitle}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 md:gap-5">
+                  <a
+                    href={`https://docs.google.com/viewer?url=${encodeURIComponent(`https://drive.google.com/uc?id=${activePdfId}`)}&embedded=true`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[9px] md:text-xs text-gray-500 hover:text-[#ff4d00] flex items-center gap-1 font-sans font-semibold transition-colors cursor-none py-1.5 px-3 rounded-full hover:bg-[#ff4d00]/5 border border-gray-200"
+                  >
+                    새 창으로 보기 <ExternalLink size={11} className="w-3 h-3" />
+                  </a>
+                  <button
+                    onClick={() => setActivePdfId(null)}
+                    className="text-gray-400 hover:text-gray-600 transition-colors cursor-none p-1 bg-gray-100 hover:bg-gray-200 rounded-full"
+                    aria-label="Close document"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+              
+              {/* PDF Content Area */}
+              <div className="flex-1 bg-[#1a1a1a] relative">
+                {isPdfLoading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FFF8F2] gap-3 z-10">
+                    <div className="w-10 h-10 border-4 border-[#ff4d00]/10 border-t-[#ff4d00] rounded-full animate-spin" />
+                    <span className="text-[10px] font-sans tracking-[0.2em] text-[#ff4d00] font-bold animate-pulse uppercase">
+                      Document Loading...
+                    </span>
+                  </div>
+                )}
+                <iframe
+                  src={`https://drive.google.com/file/d/${activePdfId}/preview`}
+                  className="w-full h-full border-none"
+                  onLoad={() => setIsPdfLoading(false)}
+                  title="Document Preview"
+                  allow="autoplay"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Admin Panel Modal */}
       <AnimatePresence>

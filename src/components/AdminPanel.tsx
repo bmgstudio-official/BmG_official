@@ -267,6 +267,11 @@ export function AdminPanel({ onClose }: AdminPanelProps) {
                               className="w-full p-2 border border-gray-200 rounded-lg text-xs"
                               placeholder="https://gmail.com or https://vimeo.com/..."
                             />
+                            {page.externalLink?.includes('drive.google.com') && (
+                              <p className="text-[10px] text-green-600 font-semibold tracking-wide">
+                                ✨ 구글 드라이브 링크가 감지되었습니다. 새 창에서 다운로드 창 없이 바로 열리도록 자동 최적화 구문이 사용됩니다.
+                              </p>
+                            )}
                           </div>
                           {page.mediaType === 'image' && (
                             <div className="space-y-2 md:col-span-2">
