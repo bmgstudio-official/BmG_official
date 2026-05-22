@@ -212,6 +212,19 @@ function MainContent() {
                   }
                 }}
                 onTouchStart={() => setIsMainMediaHovered(true)}
+                onTouchMove={(e) => {
+                  const touch = e.touches[0];
+                  if (touch) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const isInside = (
+                      touch.clientX >= rect.left &&
+                      touch.clientX <= rect.right &&
+                      touch.clientY >= rect.top &&
+                      touch.clientY <= rect.bottom
+                    );
+                    setIsMainMediaHovered(isInside);
+                  }
+                }}
                 onTouchEnd={() => setIsMainMediaHovered(false)}
                 onTouchCancel={() => setIsMainMediaHovered(false)}
               >
