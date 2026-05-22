@@ -201,8 +201,19 @@ function MainContent() {
                     }
                   }
                 }}
-                onMouseEnter={() => setIsMainMediaHovered(true)}
-                onMouseLeave={() => setIsMainMediaHovered(false)}
+                onMouseEnter={() => {
+                  if (window.matchMedia('(pointer: fine)').matches) {
+                    setIsMainMediaHovered(true);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (window.matchMedia('(pointer: fine)').matches) {
+                    setIsMainMediaHovered(false);
+                  }
+                }}
+                onTouchStart={() => setIsMainMediaHovered(true)}
+                onTouchEnd={() => setIsMainMediaHovered(false)}
+                onTouchCancel={() => setIsMainMediaHovered(false)}
               >
                 {config.pages[currentPage].mediaType === 'image' ? (
                   <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
