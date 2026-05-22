@@ -201,6 +201,10 @@ function MainContent() {
                     }
                   }
                 }}
+                onPointerDown={(e) => {
+                  // Prevent parent framer-motion drag from intercepting touch events on the media element
+                  e.stopPropagation();
+                }}
                 onMouseEnter={() => {
                   if (window.matchMedia('(pointer: fine)').matches) {
                     setIsMainMediaHovered(true);
@@ -211,8 +215,12 @@ function MainContent() {
                     setIsMainMediaHovered(false);
                   }
                 }}
-                onTouchStart={() => setIsMainMediaHovered(true)}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  setIsMainMediaHovered(true);
+                }}
                 onTouchMove={(e) => {
+                  e.stopPropagation();
                   const touch = e.touches[0];
                   if (touch) {
                     const rect = e.currentTarget.getBoundingClientRect();
@@ -225,8 +233,14 @@ function MainContent() {
                     setIsMainMediaHovered(isInside);
                   }
                 }}
-                onTouchEnd={() => setIsMainMediaHovered(false)}
-                onTouchCancel={() => setIsMainMediaHovered(false)}
+                onTouchEnd={(e) => {
+                  e.stopPropagation();
+                  setIsMainMediaHovered(false);
+                }}
+                onTouchCancel={(e) => {
+                  e.stopPropagation();
+                  setIsMainMediaHovered(false);
+                }}
               >
                 {config.pages[currentPage].mediaType === 'image' ? (
                   <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
