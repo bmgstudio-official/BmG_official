@@ -77,6 +77,13 @@ function MainContent() {
         setIsMainMediaHovered(false);
         return;
       }
+      
+      // On desktop, native mouseenter/mouseleave are perfect and handle iframe scale properly.
+      // We skip mouse events here to let native handlers take prefix and avoid flickering.
+      if (e.pointerType === 'mouse') {
+        return;
+      }
+
       const isInside = isInsideMedia(e.clientX, e.clientY);
       if (isInside) {
         setIsMainMediaHovered(true);
@@ -90,6 +97,11 @@ function MainContent() {
         setIsMainMediaHovered(false);
         return;
       }
+
+      if (e.pointerType === 'mouse') {
+        return;
+      }
+
       const isInside = isInsideMedia(e.clientX, e.clientY);
       if (isInside) {
         setIsMainMediaHovered(true);
@@ -257,6 +269,14 @@ function MainContent() {
                 onPointerDown={(e) => {
                   // Prevent parent framer-motion drag from intercepting touch events on the media element
                   e.stopPropagation();
+                }}
+                onMouseEnter={() => {
+                  if (config.pages[currentPage]?.id !== 1) {
+                    setIsMainMediaHovered(true);
+                  }
+                }}
+                onMouseLeave={() => {
+                  setIsMainMediaHovered(false);
                 }}
               >
                 {config.pages[currentPage].mediaType === 'image' ? (

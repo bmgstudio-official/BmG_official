@@ -24,7 +24,31 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     if (savedConfig) {
       try {
         const parsed = JSON.parse(savedConfig);
-        setConfig(parsed);
+        
+        // Strict version check to force refresh client cache when code updates
+        const isOutdatedVersion = parsed.version !== INITIAL_CONFIG.version;
+        
+        const parsedUrls = JSON.stringify(parsed.pages?.map((p: any) => ({
+          id: p.id,
+          mediaUrl: p.mediaUrl,
+          mediaUrlHover: p.mediaUrlHover || '',
+          fontFamily: p.styles?.fontFamily || ''
+        })) || []);
+        
+        const initialUrls = JSON.stringify(INITIAL_CONFIG.pages.map((p: any) => ({
+          id: p.id,
+          mediaUrl: p.mediaUrl,
+          mediaUrlHover: p.mediaUrlHover || '',
+          fontFamily: p.styles?.fontFamily || ''
+        })));
+
+        if (isOutdatedVersion || parsedUrls !== initialUrls) {
+          console.log('Local storage version or content mismatched compiled config, resetting cache to source of truth.');
+          setConfig(INITIAL_CONFIG);
+          localStorage.setItem(PERSISTENT_KEY, JSON.stringify(INITIAL_CONFIG));
+        } else {
+          setConfig(parsed);
+        }
       } catch (err) {
         console.error('Failed to parse saved persistent config:', err);
       }

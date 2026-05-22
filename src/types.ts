@@ -19,4 +19,5 @@ export interface SiteConfig {
   logoUrl: string;
   backgroundColor: string;
   pages: PageConfig[];
+  version?: string;
 }

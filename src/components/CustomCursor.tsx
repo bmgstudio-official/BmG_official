@@ -75,7 +75,7 @@ export function CustomCursor() {
 
       const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
       if (target) {
-        const clickable = target.closest('button, a, .orange-hover, .main-media-container, .nav-arrow');
+        const clickable = target.closest('button, a, .orange-hover, .main-media-container.hover-enabled, .nav-arrow');
         const navArrow = target.closest('.nav-arrow');
         setIsHovering(!!clickable);
         setIsNavArrow(!!navArrow);
@@ -106,7 +106,7 @@ export function CustomCursor() {
 
       const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
       if (target) {
-        const clickable = target.closest('button, a, .orange-hover, .main-media-container, .nav-arrow');
+        const clickable = target.closest('button, a, .orange-hover, .main-media-container.hover-enabled, .nav-arrow');
         const navArrow = target.closest('.nav-arrow');
         setIsHovering(!!clickable);
         setIsNavArrow(!!navArrow);
@@ -172,14 +172,14 @@ export function CustomCursor() {
               key="orange-cursor"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ 
-                scale: isNavArrow ? (isMobile ? 0.3 : 0.5) : 0.7, 
+                scale: isNavArrow ? (isMobile ? 0.4 : 0.5) : 1, 
                 opacity: 1 
               }}
               exit={{ scale: 0, opacity: 0 }}
-              className={`${isMobile ? 'w-[108px] h-[108px]' : 'w-24 h-24'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
+              className={`${isMobile ? 'w-[72px] h-[72px]' : 'w-[84px] h-[84px]'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
             >
               {!isNavArrow && (
-                <span className={`${isMobile ? 'text-lg' : 'text-lg'} text-white font-bold uppercase tracking-widest`}>go</span>
+                <span className={`${isMobile ? 'text-sm' : 'text-base'} text-white font-bold uppercase tracking-widest`}>go</span>
               )}
             </motion.div>
           ) : (
