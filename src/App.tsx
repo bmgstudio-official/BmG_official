@@ -167,7 +167,7 @@ function MainContent() {
             <div className="max-w-7xl w-full flex flex-col items-center gap-6 md:gap-12">
               {/* Media Section */}
               <motion.div 
-                className={`relative overflow-hidden group flex items-center justify-center
+                className={`relative overflow-hidden group flex items-center justify-center touch-none
                   ${config.pages[currentPage].id !== 1 ? 'orange-hover' : ''}
                   ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none border-none' : 'rounded-lg shadow-2xl'}
                   ${[3, 4].includes(config.pages[currentPage].id) ? 'w-fit max-w-[70vw] md:max-w-2xl' : ''}
@@ -233,8 +233,8 @@ function MainContent() {
                     <img 
                       src={config.pages[currentPage].mediaUrl} 
                       alt={config.pages[currentPage].title}
-                      className={`max-w-full max-h-full object-contain transition-all duration-700 
-                        ${config.pages[currentPage].id === 1 ? '' : 'group-hover:scale-105'}
+                      className={`max-w-full max-h-full object-contain transition-all duration-700 pointer-events-none select-none
+                        ${config.pages[currentPage].id === 1 ? '' : (isMainMediaHovered ? 'scale-[1.05]' : 'scale-100')}
                         ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
                         ${config.pages[currentPage].mediaUrlHover && isMainMediaHovered ? 'opacity-0' : 'opacity-100'}
                       `}
@@ -243,8 +243,8 @@ function MainContent() {
                       <img 
                         src={config.pages[currentPage].mediaUrlHover} 
                         alt={`${config.pages[currentPage].title} Hover`}
-                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-700 
-                          ${config.pages[currentPage].id === 1 ? '' : 'group-hover:scale-105'}
+                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-700 pointer-events-none select-none
+                          ${config.pages[currentPage].id === 1 ? '' : (isMainMediaHovered ? 'scale-[1.05]' : 'scale-100')}
                           ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
                           ${isMainMediaHovered ? 'opacity-100' : 'opacity-0'}
                         `}
