@@ -62,25 +62,14 @@ function MainContent() {
 
   useEffect(() => {
     const isInsideMedia = (x: number, y: number) => {
-      if (!mediaContainerRef.current) return false;
-      const rect = mediaContainerRef.current.getBoundingClientRect();
-      return (
-        x >= rect.left &&
-        x <= rect.right &&
-        y >= rect.top &&
-        y <= rect.bottom
-      );
+      const element = document.elementFromPoint(x, y);
+      if (!element) return false;
+      return !!element.closest('.main-media-container.hover-enabled');
     };
 
     const handlePointerMove = (e: PointerEvent) => {
       if (config.pages[currentPage]?.id === 1) {
         setIsMainMediaHovered(false);
-        return;
-      }
-      
-      // On desktop, native mouseenter/mouseleave are perfect and handle iframe scale properly.
-      // We skip mouse events here to let native handlers take prefix and avoid flickering.
-      if (e.pointerType === 'mouse') {
         return;
       }
 
@@ -98,10 +87,6 @@ function MainContent() {
         return;
       }
 
-      if (e.pointerType === 'mouse') {
-        return;
-      }
-
       const isInside = isInsideMedia(e.clientX, e.clientY);
       if (isInside) {
         setIsMainMediaHovered(true);
@@ -110,16 +95,58 @@ function MainContent() {
       }
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (config.pages[currentPage]?.id === 1) {
+        setIsMainMediaHovered(false);
+        return;
+      }
+      if (e.touches && e.touches.length > 0) {
+        const touch = e.touches[0];
+        const isInside = isInsideMedia(touch.clientX, touch.clientY);
+        if (isInside) {
+          setIsMainMediaHovered(true);
+        } else {
+          setIsMainMediaHovered(false);
+        }
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (config.pages[currentPage]?.id === 1) {
+        setIsMainMediaHovered(false);
+        return;
+      }
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        const touch = e.changedTouches[0];
+        const isInside = isInsideMedia(touch.clientX, touch.clientY);
+        if (isInside) {
+          setIsMainMediaHovered(true);
+        } else {
+          setIsMainMediaHovered(false);
+        }
+      }
+    };
+
     window.addEventListener('pointerdown', handlePointerMove, { capture: true, passive: true });
     window.addEventListener('pointermove', handlePointerMove, { capture: true, passive: true });
     window.addEventListener('pointerup', handlePointerUp, { capture: true, passive: true });
     window.addEventListener('pointercancel', handlePointerUp, { capture: true, passive: true });
+
+    window.addEventListener('touchstart', handleTouchMove, { capture: true, passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { capture: true, passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { capture: true, passive: true });
+    window.addEventListener('touchcancel', handleTouchEnd, { capture: true, passive: true });
 
     return () => {
       window.removeEventListener('pointerdown', handlePointerMove, { capture: true });
       window.removeEventListener('pointermove', handlePointerMove, { capture: true });
       window.removeEventListener('pointerup', handlePointerUp, { capture: true });
       window.removeEventListener('pointercancel', handlePointerUp, { capture: true });
+
+      window.removeEventListener('touchstart', handleTouchMove, { capture: true });
+      window.removeEventListener('touchmove', handleTouchMove, { capture: true });
+      window.removeEventListener('touchend', handleTouchEnd, { capture: true });
+      window.removeEventListener('touchcancel', handleTouchEnd, { capture: true });
     };
   }, [currentPage, config]);
 
@@ -284,7 +311,7 @@ function MainContent() {
                     <img 
                       src={config.pages[currentPage].mediaUrl} 
                       alt={config.pages[currentPage].title}
-                      className={`max-w-full max-h-full object-contain transition-all duration-700 pointer-events-none select-none
+                      className={`max-w-full max-h-full object-contain transition-all duration-200 pointer-events-none select-none
                         ${config.pages[currentPage].id === 1 ? '' : (isMainMediaHovered ? 'scale-[1.05]' : 'scale-100')}
                         ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
                         ${config.pages[currentPage].mediaUrlHover && isMainMediaHovered ? 'opacity-0' : 'opacity-100'}
@@ -294,7 +321,7 @@ function MainContent() {
                       <img 
                         src={config.pages[currentPage].mediaUrlHover} 
                         alt={`${config.pages[currentPage].title} Hover`}
-                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-700 pointer-events-none select-none
+                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-200 pointer-events-none select-none
                           ${config.pages[currentPage].id === 1 ? '' : (isMainMediaHovered ? 'scale-[1.05]' : 'scale-100')}
                           ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
                           ${isMainMediaHovered ? 'opacity-100' : 'opacity-0'}
