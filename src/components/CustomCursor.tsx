@@ -237,10 +237,10 @@ export function CustomCursor() {
                 opacity: 1 
               }}
               exit={{ scale: 0, opacity: 0 }}
-              className={`${isMobile ? 'w-[75px] h-[75px]' : 'w-[84px] h-[84px]'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
+              className={`${isMobile ? 'w-[45px] h-[45px]' : 'w-[84px] h-[84px]'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
             >
               {(isOverImage || isMobile) && !isNavArrow && (
-                <span className={`${isMobile ? 'text-sm font-bold' : 'text-base font-bold'} text-white uppercase tracking-widest`}>go</span>
+                <span className={`${isMobile ? 'text-[10px] font-bold tracking-wider leading-none pl-[1px]' : 'text-base font-bold uppercase tracking-widest'} text-white uppercase`}>go</span>
               )}
             </motion.div>
           ) : (

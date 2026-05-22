@@ -311,7 +311,7 @@ function MainContent() {
                     <img 
                       src={config.pages[currentPage].mediaUrl} 
                       alt={config.pages[currentPage].title}
-                      className={`max-w-full max-h-full object-contain transition-all duration-200 pointer-events-none select-none
+                      className={`max-w-full max-h-full object-contain transition-all duration-500 ease-in-out pointer-events-none select-none
                         ${config.pages[currentPage].id === 1 ? '' : (isMainMediaHovered ? 'scale-[1.05]' : 'scale-100')}
                         ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
                         ${config.pages[currentPage].mediaUrlHover && isMainMediaHovered ? 'opacity-0' : 'opacity-100'}
@@ -321,7 +321,7 @@ function MainContent() {
                       <img 
                         src={config.pages[currentPage].mediaUrlHover} 
                         alt={`${config.pages[currentPage].title} Hover`}
-                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-200 pointer-events-none select-none
+                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-in-out pointer-events-none select-none
                           ${config.pages[currentPage].id === 1 ? '' : (isMainMediaHovered ? 'scale-[1.05]' : 'scale-100')}
                           ${[3, 4].includes(config.pages[currentPage].id) ? 'block w-auto h-auto' : ''}
                           ${isMainMediaHovered ? 'opacity-100' : 'opacity-0'}
@@ -372,7 +372,7 @@ function MainContent() {
                 )}
                 {config.pages[currentPage].description && (
                   <motion.p 
-                    className={`${config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl page-2-description font-serif' : 'max-w-2xl text-balance'} mx-auto whitespace-pre-wrap break-words`}
+                    className={`${config.pages[currentPage].styles.descriptionSize} ${config.pages[currentPage].styles.fontFamily} ${config.pages[currentPage].id === 2 ? 'max-w-5xl page-2-description font-serif font-bold' : 'max-w-2xl text-balance'} mx-auto whitespace-pre-wrap break-words`}
                     style={{ color: config.pages[currentPage].styles.descriptionColor }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
