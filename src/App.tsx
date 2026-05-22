@@ -72,11 +72,12 @@ function MainContent() {
       );
     };
 
-    const handleGlobalTouch = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      if (!touch) return;
-
-      const isInside = isInsideMedia(touch.clientX, touch.clientY);
+    const handlePointerMove = (e: PointerEvent) => {
+      if (config.pages[currentPage]?.id === 1) {
+        setIsMainMediaHovered(false);
+        return;
+      }
+      const isInside = isInsideMedia(e.clientX, e.clientY);
       if (isInside) {
         setIsMainMediaHovered(true);
       } else {
@@ -84,36 +85,35 @@ function MainContent() {
       }
     };
 
-    const handleGlobalTouchEnd = (e: TouchEvent) => {
-      const touch = e.changedTouches[0];
-      if (touch) {
-        const isInside = isInsideMedia(touch.clientX, touch.clientY);
-        if (isInside) {
-          // If touch ended inside the media, keep rollover action active as requested
-          setIsMainMediaHovered(true);
-        } else {
-          setIsMainMediaHovered(false);
-        }
+    const handlePointerUp = (e: PointerEvent) => {
+      if (config.pages[currentPage]?.id === 1) {
+        setIsMainMediaHovered(false);
+        return;
+      }
+      const isInside = isInsideMedia(e.clientX, e.clientY);
+      if (isInside) {
+        setIsMainMediaHovered(true);
+      } else {
+        setIsMainMediaHovered(false);
       }
     };
 
-    // Use capture phase (capture: true) so it runs before any bubble stopPropagation
-    window.addEventListener('touchstart', handleGlobalTouch, { capture: true, passive: true });
-    window.addEventListener('touchmove', handleGlobalTouch, { capture: true, passive: true });
-    window.addEventListener('touchend', handleGlobalTouchEnd, { capture: true, passive: true });
-    window.addEventListener('touchcancel', handleGlobalTouchEnd, { capture: true, passive: true });
+    window.addEventListener('pointerdown', handlePointerMove, { capture: true, passive: true });
+    window.addEventListener('pointermove', handlePointerMove, { capture: true, passive: true });
+    window.addEventListener('pointerup', handlePointerUp, { capture: true, passive: true });
+    window.addEventListener('pointercancel', handlePointerUp, { capture: true, passive: true });
 
     return () => {
-      window.removeEventListener('touchstart', handleGlobalTouch, { capture: true });
-      window.removeEventListener('touchmove', handleGlobalTouch, { capture: true });
-      window.removeEventListener('touchend', handleGlobalTouchEnd, { capture: true });
-      window.removeEventListener('touchcancel', handleGlobalTouchEnd, { capture: true });
+      window.removeEventListener('pointerdown', handlePointerMove, { capture: true });
+      window.removeEventListener('pointermove', handlePointerMove, { capture: true });
+      window.removeEventListener('pointerup', handlePointerUp, { capture: true });
+      window.removeEventListener('pointercancel', handlePointerUp, { capture: true });
     };
-  }, [currentPage]);
+  }, [currentPage, config]);
 
   return (
     <div 
-      className="relative h-screen w-full overflow-hidden transition-colors duration-500 cursor-none"
+      className="relative h-screen w-full overflow-hidden transition-colors duration-500 cursor-none select-none touch-none"
       style={{ backgroundColor: config.backgroundColor }}
     >
       <CustomCursor />
@@ -220,8 +220,8 @@ function MainContent() {
               {/* Media Section */}
               <motion.div 
                 ref={mediaContainerRef}
-                className={`relative overflow-hidden group flex items-center justify-center touch-none
-                  ${config.pages[currentPage].id !== 1 ? 'orange-hover' : ''}
+                className={`relative overflow-hidden group flex items-center justify-center touch-none main-media-container
+                  ${config.pages[currentPage].id !== 1 ? 'orange-hover hover-enabled' : ''}
                   ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none border-none' : 'rounded-lg shadow-2xl'}
                   ${[3, 4].includes(config.pages[currentPage].id) ? 'w-fit max-w-[70vw] md:max-w-2xl' : ''}
                   ${config.pages[currentPage].mediaType === 'video' ? 'w-full md:w-[85%] aspect-video h-auto max-h-[60vh] md:max-h-[80vh] bg-black' : ''}
@@ -256,28 +256,6 @@ function MainContent() {
                 }}
                 onPointerDown={(e) => {
                   // Prevent parent framer-motion drag from intercepting touch events on the media element
-                  e.stopPropagation();
-                }}
-                onMouseEnter={() => {
-                  if (window.matchMedia('(pointer: fine)').matches) {
-                    setIsMainMediaHovered(true);
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (window.matchMedia('(pointer: fine)').matches) {
-                    setIsMainMediaHovered(false);
-                  }
-                }}
-                onTouchStart={(e) => {
-                  e.stopPropagation();
-                }}
-                onTouchMove={(e) => {
-                  e.stopPropagation();
-                }}
-                onTouchEnd={(e) => {
-                  e.stopPropagation();
-                }}
-                onTouchCancel={(e) => {
                   e.stopPropagation();
                 }}
               >

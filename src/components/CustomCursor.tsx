@@ -42,73 +42,101 @@ export function CustomCursor() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    const moveCursor = (e: MouseEvent) => {
+    const isInsideMedia = (x: number, y: number) => {
+      const element = document.querySelector('.main-media-container.hover-enabled');
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return (
+        x >= rect.left &&
+        x <= rect.right &&
+        y >= rect.top &&
+        y <= rect.bottom
+      );
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
-    };
 
-    const moveTouch = (e: TouchEvent) => {
-      if (e.touches[0]) {
-        cursorX.set(e.touches[0].clientX);
-        cursorY.set(e.touches[0].clientY);
+      const isInside = isInsideMedia(e.clientX, e.clientY);
+      
+      // On mobile, if touch-drag is occurring, force showing the orange circular cursor
+      if (isMobile && e.pointerType === 'touch') {
+        setIsHovering(true);
+        setIsNavArrow(false);
+        return;
+      }
+
+      if (isInside) {
+        setIsHovering(true);
+        setIsNavArrow(false);
+        return;
+      }
+
+      const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+      if (target) {
+        const clickable = target.closest('button, a, .orange-hover, .main-media-container, .nav-arrow');
+        const navArrow = target.closest('.nav-arrow');
+        setIsHovering(!!clickable);
+        setIsNavArrow(!!navArrow);
+      } else {
+        setIsHovering(false);
+        setIsNavArrow(false);
       }
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const clickable = target.closest('button, a, .orange-hover, .nav-arrow');
-      const navArrow = target.closest('.nav-arrow');
-      setIsHovering(!!clickable);
-      setIsNavArrow(!!navArrow);
-    };
+    const handlePointerDown = (e: PointerEvent) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
 
-    const handleTouchStart = (e: TouchEvent) => {
-      const target = e.target as HTMLElement;
-      const clickable = target.closest('button, a, .orange-hover, .nav-arrow');
-      const navArrow = target.closest('.nav-arrow');
-      setIsHovering(!!clickable);
-      setIsNavArrow(!!navArrow);
-      if (e.touches[0]) {
-        cursorX.set(e.touches[0].clientX);
-        cursorY.set(e.touches[0].clientY);
+      const isInside = isInsideMedia(e.clientX, e.clientY);
+
+      // On mobile, touch-drag anywhere shows the orange circle cursor
+      if (isMobile) {
+        setIsHovering(true);
+        setIsNavArrow(false);
+        return;
+      }
+
+      if (isInside) {
+        setIsHovering(true);
+        setIsNavArrow(false);
+        return;
+      }
+
+      const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+      if (target) {
+        const clickable = target.closest('button, a, .orange-hover, .main-media-container, .nav-arrow');
+        const navArrow = target.closest('.nav-arrow');
+        setIsHovering(!!clickable);
+        setIsNavArrow(!!navArrow);
       }
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches[0]) {
-        cursorX.set(e.touches[0].clientX);
-        cursorY.set(e.touches[0].clientY);
-        
-        const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) as HTMLElement;
-        if (target) {
-          const clickable = target.closest('button, a, .orange-hover, .nav-arrow');
-          const navArrow = target.closest('.nav-arrow');
-          setIsHovering(!!clickable);
-          setIsNavArrow(!!navArrow);
-        }
+    const handlePointerUp = (e: PointerEvent) => {
+      const isInside = isInsideMedia(e.clientX, e.clientY);
+      if (isInside) {
+        setIsHovering(true);
+        setIsNavArrow(false);
+        return;
       }
-    };
-
-    const handleTouchEnd = () => {
       setIsHovering(false);
       setIsNavArrow(false);
     };
 
-    window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('touchstart', handleTouchStart, { capture: true, passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { capture: true, passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { capture: true, passive: true });
+    window.addEventListener('pointerdown', handlePointerDown, { capture: true, passive: true });
+    window.addEventListener('pointermove', handlePointerMove, { capture: true, passive: true });
+    window.addEventListener('pointerup', handlePointerUp, { capture: true, passive: true });
+    window.addEventListener('pointercancel', handlePointerUp, { capture: true, passive: true });
     
     return () => {
       window.removeEventListener('resize', checkMobile);
-      window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', handleMouseOver);
-      window.removeEventListener('touchstart', handleTouchStart, { capture: true });
-      window.removeEventListener('touchmove', handleTouchMove, { capture: true });
-      window.removeEventListener('touchend', handleTouchEnd, { capture: true });
+      window.removeEventListener('pointerdown', handlePointerDown, { capture: true });
+      window.removeEventListener('pointermove', handlePointerMove, { capture: true });
+      window.removeEventListener('pointerup', handlePointerUp, { capture: true });
+      window.removeEventListener('pointercancel', handlePointerUp, { capture: true });
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, isMobile]);
 
   return (
     <>
@@ -148,10 +176,10 @@ export function CustomCursor() {
                 opacity: 1 
               }}
               exit={{ scale: 0, opacity: 0 }}
-              className={`${isMobile ? 'w-12 h-12' : 'w-24 h-24'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
+              className={`${isMobile ? 'w-[108px] h-[108px]' : 'w-24 h-24'} rounded-full bg-orange-500/90 mix-blend-difference flex items-center justify-center`}
             >
               {!isNavArrow && (
-                <span className={`${isMobile ? 'text-xs' : 'text-lg'} text-white font-bold uppercase tracking-widest`}>go</span>
+                <span className={`${isMobile ? 'text-lg' : 'text-lg'} text-white font-bold uppercase tracking-widest`}>go</span>
               )}
             </motion.div>
           ) : (
