@@ -96,17 +96,17 @@ export function CustomCursor() {
 
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('touchstart', handleTouchStart, { capture: true, passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { capture: true, passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { capture: true, passive: true });
     
     return () => {
       window.removeEventListener('resize', checkMobile);
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchstart', handleTouchStart, { capture: true });
+      window.removeEventListener('touchmove', handleTouchMove, { capture: true });
+      window.removeEventListener('touchend', handleTouchEnd, { capture: true });
     };
   }, [cursorX, cursorY]);
 

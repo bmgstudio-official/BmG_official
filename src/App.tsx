@@ -28,6 +28,7 @@ function MainContent() {
   const [activePdfTitle, setActivePdfTitle] = useState<string>('');
   const [isPdfLoading, setIsPdfLoading] = useState(true);
   const totalPages = config.pages.length;
+  const mediaContainerRef = useRef<HTMLDivElement>(null);
 
   const handleNext = useCallback(() => {
     if (currentPage < totalPages - 1) {
@@ -58,6 +59,57 @@ function MainContent() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrev]);
+
+  useEffect(() => {
+    const isInsideMedia = (x: number, y: number) => {
+      if (!mediaContainerRef.current) return false;
+      const rect = mediaContainerRef.current.getBoundingClientRect();
+      return (
+        x >= rect.left &&
+        x <= rect.right &&
+        y >= rect.top &&
+        y <= rect.bottom
+      );
+    };
+
+    const handleGlobalTouch = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+
+      const isInside = isInsideMedia(touch.clientX, touch.clientY);
+      if (isInside) {
+        setIsMainMediaHovered(true);
+      } else {
+        setIsMainMediaHovered(false);
+      }
+    };
+
+    const handleGlobalTouchEnd = (e: TouchEvent) => {
+      const touch = e.changedTouches[0];
+      if (touch) {
+        const isInside = isInsideMedia(touch.clientX, touch.clientY);
+        if (isInside) {
+          // If touch ended inside the media, keep rollover action active as requested
+          setIsMainMediaHovered(true);
+        } else {
+          setIsMainMediaHovered(false);
+        }
+      }
+    };
+
+    // Use capture phase (capture: true) so it runs before any bubble stopPropagation
+    window.addEventListener('touchstart', handleGlobalTouch, { capture: true, passive: true });
+    window.addEventListener('touchmove', handleGlobalTouch, { capture: true, passive: true });
+    window.addEventListener('touchend', handleGlobalTouchEnd, { capture: true, passive: true });
+    window.addEventListener('touchcancel', handleGlobalTouchEnd, { capture: true, passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleGlobalTouch, { capture: true });
+      window.removeEventListener('touchmove', handleGlobalTouch, { capture: true });
+      window.removeEventListener('touchend', handleGlobalTouchEnd, { capture: true });
+      window.removeEventListener('touchcancel', handleGlobalTouchEnd, { capture: true });
+    };
+  }, [currentPage]);
 
   return (
     <div 
@@ -167,6 +219,7 @@ function MainContent() {
             <div className="max-w-7xl w-full flex flex-col items-center gap-6 md:gap-12">
               {/* Media Section */}
               <motion.div 
+                ref={mediaContainerRef}
                 className={`relative overflow-hidden group flex items-center justify-center touch-none
                   ${config.pages[currentPage].id !== 1 ? 'orange-hover' : ''}
                   ${config.pages[currentPage].id === 1 ? 'w-[70%] md:w-[33%] shadow-none border-none' : 'rounded-lg shadow-2xl'}
@@ -217,29 +270,15 @@ function MainContent() {
                 }}
                 onTouchStart={(e) => {
                   e.stopPropagation();
-                  setIsMainMediaHovered(true);
                 }}
                 onTouchMove={(e) => {
                   e.stopPropagation();
-                  const touch = e.touches[0];
-                  if (touch) {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const isInside = (
-                      touch.clientX >= rect.left &&
-                      touch.clientX <= rect.right &&
-                      touch.clientY >= rect.top &&
-                      touch.clientY <= rect.bottom
-                    );
-                    setIsMainMediaHovered(isInside);
-                  }
                 }}
                 onTouchEnd={(e) => {
                   e.stopPropagation();
-                  setIsMainMediaHovered(false);
                 }}
                 onTouchCancel={(e) => {
                   e.stopPropagation();
-                  setIsMainMediaHovered(false);
                 }}
               >
                 {config.pages[currentPage].mediaType === 'image' ? (
