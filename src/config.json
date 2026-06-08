@@ -1,5 +1,5 @@
 {
-  "version": "2026-05-23-v1",
+  "version": "2026-06-08-v1",
   "logoUrl": "https://i.ibb.co/4n3RFDrL/bmg-logo-v2.png",
   "backgroundColor": "#FFEEDF",
   "pages": [
@@ -35,7 +35,7 @@
     {
       "id": 3,
       "title": "Artworks",
-      "description": "the Heart is Captured.",
+      "description": "the Heart is Captured",
       "mediaUrl": "https://i.ibb.co/ds5NrZWc/lying-white-1.png",
       "mediaUrlHover": "https://i.ibb.co/fGkvjk3T/lying-blue-1.png",
       "mediaType": "image",

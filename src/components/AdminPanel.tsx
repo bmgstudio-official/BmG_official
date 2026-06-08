@@ -14,6 +14,100 @@ export function AdminPanel({ onClose }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<'general' | 'pages'>('general');
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authError, setAuthError] = useState(false);
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/[^0-9]/g, '');
+    if (val.length <= 4) {
+      setPasswordInput(val);
+      if (val.length < 4) {
+        setAuthError(false);
+      }
+      if (val === '0514') {
+        setIsAuthenticated(true);
+        setAuthError(false);
+      } else if (val.length === 4) {
+        setAuthError(true);
+        setTimeout(() => {
+          setPasswordInput('');
+        }, 600);
+      }
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-end p-4 sm:p-8"
+      >
+        <motion.div 
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+          className="w-full max-w-md bg-[#FFEEDF] rounded-2xl shadow-2xl flex flex-col overflow-hidden text-black border border-orange-200/50"
+        >
+          {/* Header with Close */}
+          <div className="p-4 flex justify-end">
+            <button onClick={onClose} className="p-2 hover:bg-orange-100 rounded-full transition-colors cursor-none">
+              <X size={20} className="text-gray-600" />
+            </button>
+          </div>
+
+          {/* Passcode Body */}
+          <div className="flex flex-col items-center justify-center px-8 pb-12 text-center">
+            {/* Lock Security Logo */}
+            <div className="mb-6 w-14 h-14 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-500">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>
+
+            <h3 className="text-lg font-bold text-gray-800 tracking-tight mb-2">설정 페이지 보호</h3>
+            <p className="text-xs text-gray-500 max-w-[280px] leading-relaxed mb-6">
+              관리자 설정을 편집하려면 비밀번호 4 자리를 입력해 주세요.
+            </p>
+
+            {/* Simple centered numeric input with passcode styling */}
+            <div className="relative w-full max-w-[160px] mb-4">
+              <input
+                type="password"
+                pattern="[0-9]*"
+                inputMode="numeric"
+                maxLength={4}
+                value={passwordInput}
+                onChange={handlePasswordChange}
+                placeholder="••••"
+                className={`w-full text-center tracking-[0.5em] font-sans text-2xl font-bold py-3 px-2 border-2 rounded-xl focus:outline-none transition-all duration-300 bg-white text-black cursor-none ${
+                  authError 
+                    ? 'border-red-500 focus:border-red-500 ring-2 ring-red-500/10' 
+                    : 'border-orange-200 focus:border-orange-500 ring-2 ring-orange-500/5'
+                }`}
+                autoFocus
+              />
+            </div>
+
+            {authError ? (
+              <motion.p
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-xs text-red-500 font-bold tracking-tight mt-2"
+              >
+                비밀번호가 올바르지 않습니다.
+              </motion.p>
+            ) : (
+              <p className="text-[11px] text-gray-400 font-medium">숫자 4자리 입력 시 즉시 확인합니다</p>
+            )}
+          </div>
+        </motion.div>
+      </motion.div>
+    );
+  }
 
   const handleSave = async () => {
     setIsSaving(true);
